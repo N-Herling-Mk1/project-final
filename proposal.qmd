@@ -22,13 +22,19 @@ execute:
 #| label: load-pkgs
 #| message: false
 library(tidyverse)
+library(here)
 ```
 
 ## Dataset
 
 ```{r}
-#| label: load-dataset
+#| label: Water Insecurity
 #| message: false
+water_insecurity_2022 <- read_csv(here("water_insecurity","water_insecurity_2022.csv"))
+water_insecurity_2023 <- read_csv(here("water_insecurity","water_insecurity_2023.csv"))
+glimpse(water_insecurity_2022)
+glimpse(water_insecurity_2023)
+
 ```
 
 A brief description of your dataset including its provenance, dimensions, etc. as well as the reason why you chose this dataset.
