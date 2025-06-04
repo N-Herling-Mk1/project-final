@@ -39,6 +39,8 @@ glimpse(water_insecurity_2023)
 
 A brief description of your dataset including its provenance, dimensions, etc. as well as the reason why you chose this dataset.
 
+For the final project, We selected the U.S. Water Insecurity dataset from the TidyTuseday 2025-01-28.
+
 Make sure to load the data and use inline code for some of this information.
 
 ## Questions
