@@ -1,5 +1,5 @@
 ---
-title: "Proposal title"
+title: "Water insecurity in the U.S. - indoor plumbing"
 subtitle: "Proposal"
 author: 
   - name: "Team: Yashi Mi & Nathan Herling"
@@ -18,22 +18,35 @@ execute:
   warning: false
 ---
 
+## Packages Setup
+<details>
+  <summary>Installed Packages</summary>
 ```{r}
 #| label: load-pkgs
 #| message: false
+
+# - loading package manager
 if (!require(pacman))
   install.packages(pacman)
 
+# - loading required packages
 pacman::p_load(tidyverse,
                here,
                tibble)
 ```
-
+</details>
 ## Dataset
 
 ```{r}
 #| label: Water Insecurity
 #| message: false
+# Load water insecurity data from the TidyTuesday project (2025-01-28)
+# This dataset explores social vulnerability and access to complete indoor plumbing across U.S. counties,
+# curated by Niha Pereira and featured in the blog post:
+# "Mapping water insecurity in R with tidycensus"
+# Original data sources include the U.S. Census Bureau (ACS) and the USGS Vizlab’s
+# “Unequal Access to Water” visualization.
+# Repo: https://github.com/rfordatascience/tidytuesday/tree/main/data/2025/2025-01-28
 water_insecurity_2022 <- read_csv(here("water_insecurity","water_insecurity_2022.csv"))
 water_insecurity_2023 <- read_csv(here("water_insecurity","water_insecurity_2023.csv"))
 glimpse(water_insecurity_2022)

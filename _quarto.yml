@@ -19,6 +19,7 @@ website:
 
 format:
   html:
+    favicon: images/water_drop.png   # Path to your image file "images\water_drop.png"
     theme:
       light: flatly
       dark: darkly
