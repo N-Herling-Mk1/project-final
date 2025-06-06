@@ -97,4 +97,12 @@ Question 2: How did plumbing insecurity change between 2022 and 2023 for each co
 
 ## Analysis plan
 
--   A plan for answering each of the questions including the variables involved, variables to be created (if any), external data to be merged in (if any).
+The following are the approaches we will be using for each question.
+
+## **Approach for question 1**
+
+-   We want to visualize which U.S. counties experienced the highest level of plumbing insecurity in 2022 and 2023. To represent the available data best, we will be creating bar graphs showing the top 10 counties with the highest percentages of households lacking complete indoor plumbing for each year. The comparison of the plot will be done for each individual year to highlight the most affected regions in the U.S.
+
+    We will clean the data using dplyr package by filtering and selecting the required variables for the analysis, including name, percent_lacking_plumbing, and year. We will sort the counties in descending order of percent_lacking_plumbing for each year. And the Top 10 counties for both 2022 and 2023 will be selected and combined into a single dataset for the visualization.
+
+    To visualize the results, we will use geom_col() from ggplot2 package to create bar graph, showing comparison between 2022 and 2023 using facet separation. These plots will allow us to address our first research question by identifying the top 10 counties with plumbing insecurity in the U.S and comparing the top-affected regions between 2022 and 2023.
