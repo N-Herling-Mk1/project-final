@@ -1,11 +1,11 @@
 ---
-title: "Water insecurity in the U.S. - indoor plumbing"
-subtitle: "Proposal"
+title: "Plumbing the Data:\nMapping U.S. Water Insecurity"
+subtitle: "Final project proposal - INFO 526"
 author: 
   - name: "Team: Yashi Mi & Nathan Herling"
     affiliations:
       - name: "School of Information, University of Arizona"
-description: "Project description"
+description: "**Project description**<br>This project explores county-level water insecurity in the U.S. for 2022 and 2023, focusing on access to complete indoor plumbing. Using data from the American Community Survey (ACS), we analyze geographic and demographic patterns across over 850 counties each year. The goal is to identify regional disparities and year-over-year trends to better understand the social factors linked to plumbing access."
 format:
   html:
     code-tools: true
@@ -17,6 +17,7 @@ code-annotations: hover
 execute:
   warning: false
 ---
+
 
 ## Packages Setup
 <details>
@@ -32,67 +33,118 @@ if (!require(pacman))
 # - loading required packages
 pacman::p_load(tidyverse,
                here,
-               tibble)
+               tibble,
+               gt)
 ```
 </details>
+
 ## Dataset
 
 ```{r}
 #| label: Water Insecurity
 #| message: false
 # Load water insecurity data from the TidyTuesday project (2025-01-28)
-# This dataset explores social vulnerability and access to complete indoor plumbing across U.S. counties,
+# This dataset explores social vulnerability and access to complete indoor
+# plumbing across U.S. counties,
 # curated by Niha Pereira and featured in the blog post:
 # "Mapping water insecurity in R with tidycensus"
 # Original data sources include the U.S. Census Bureau (ACS) and the USGS Vizlab’s
 # “Unequal Access to Water” visualization.
-# Repo: https://github.com/rfordatascience/tidytuesday/tree/main/data/2025/2025-01-28
-water_insecurity_2022 <- read_csv(here("water_insecurity","water_insecurity_2022.csv"))
-water_insecurity_2023 <- read_csv(here("water_insecurity","water_insecurity_2023.csv"))
+# Repo: 
+# https://github.com/rfordatascience/tidytuesday/tree/main/data/2025/2025-01-28
+water_insecurity_2022 <- read_csv(here("water_insecurity",
+                                       "water_insecurity_2022.csv"))
+water_insecurity_2023 <- read_csv(here("water_insecurity",
+                                       "water_insecurity_2023.csv"))
 glimpse(water_insecurity_2022)
 glimpse(water_insecurity_2023)
 
 ```
 
+## About the ACS Plumbing Data
 For the final project, we selected the U.S. Water Insecurity dataset from TidyTuesday (2025-01-28). The 2022 and 2023 datasets were collected by the U.S. Census Bureau's American Community Survey (ACS). Each dataset provides comprehensive county-level information, including geographic boundaries, population size, the number of households lacking plumbing, and the percentage of the population lacking plumbing facilities.
 
-The two datastes includes variables such as:
+The two datastes includes the following variables:
 
--   geoid: The U.S. Census Bureau ACS county id.
+-   <code>geoid</code>: The U.S. Census Bureau ACS county id.
 
--   name: The U.S. Census Bureau ACS county name.
+-   <code>name</code>: The U.S. Census Bureau ACS county name.
 
--   year: The year of U.S. Census Bureau ACS sample.
+-   <code>year</code>: The year of U.S. Census Bureau ACS sample.
 
--   geometry: The county geographic boundaries.
+-   <code>geometry</code>: The county geographic boundaries.
 
--   total_pop: The total population.
+-   <code>total_pop</code>: The total population.
 
--   plumbing: The total owner occupied households lacking plumbing facilities.
+-   <code>plumbing</code>: The total owner occupied households lacking plumbing facilities.
 
--   percent_lacking_plumbing: The percent of population lacking plumbing facilities.
+-   <code>percent_lacking_plumbing</code>: The percent of population lacking plumbing facilities.
 
     ## water_insecurity_2022_data
 
-    ```{r}
-    table1 <- tibble(
-      variable = c("geoid", "name","geometry", "year","total_pop","plumbing","percent_lacking_plumbing"),
-      types = c("character", "character","character", "numeric","numeric","numeric","numeric"),
-      missing_count = c(0,0,0,0,0,2,2),
-      missing_percent = c(0,0,0,0,0,0.23585,0.23585))
-    table1
-    ```
+<details>
+  <summary>Code: Water Insecurity 2022 data</summary>
+```{r, echo=TRUE, results='hide'}
+# Load required packages
 
-    ## water_insecurity_2023_data
+# Create summary table
+table1 <- tibble(
+  variable = c("geoid", "name", "geometry",
+               "year", "total_pop", "plumbing",
+               "percent_lacking_plumbing"),
+  types = c("character", "character", "character",
+            "numeric", "numeric", "numeric", "numeric"),
+  missing_count = c(0, 0, 0, 0, 0, 2, 2),
+  missing_percent = c(0, 0, 0, 0, 0, 0.23585, 0.23585)
+)
 
-    ```{r}
+gt_table <- table1 |>
+  gt() |>
+  tab_header(
+    title = "Table 1: Variable Summary for Plumbing Dataset"
+  ) |>
+  fmt(
+    columns = missing_percent,
+    fns = function(x) paste0(formatC(x, format = "f", digits = 3), " %")
+  ) |>
+  cols_label(
+    variable = "Variable Name",
+    types = "Type",
+    missing_count = "Missing Count",
+    missing_percent = "Missing (%)"
+  ) |>
+  tab_style(
+    style = cell_text(weight = "bold", align = "center"),
+    locations = cells_column_labels(everything())
+  ) |>
+  tab_style(style = cell_text(align = "center"),
+            locations = cells_body(everything())) |> 
+  tab_options(
+    table.font.size = "small",
+    column_labels.font.size = "medium",
+    table.width = pct(100)     # <-- full width of container
+  )
+```
+</details>
+
+```{r, echo=FALSE}
+# Now render the table by printing the gt object
+gt_table
+```
+
+## water_insecurity_2023_data
+
+```{r}
     table2 <- tibble(
-      variable = c("geoid", "name","geometry", "year","total_pop","plumbing","percent_lacking_plumbing"),
-      types = c("character", "character","character", "numeric","numeric","numeric","numeric"),
+      variable = c("geoid", "name","geometry",
+                   "year","total_pop","plumbing",
+                   "percent_lacking_plumbing"),
+      types = c("character", "character","character", 
+                "numeric","numeric","numeric","numeric"),
       missing_count = c(0,0,0,0,0,1,1),
       missing_percent = c(0,0,0,0,0,0.1171,0.1171))
     table2
-    ```
+```
 
     These two datasets contain data on the lack of complete indoor plumbing in U.S. counties for the years 2022 and 2023. The 2022 dataset includes information from 848 counties, while the 2023 dataset includes 854 counties. Each dataset contains seven variables: geoid, name, geometry, year, total_pop, plumbing, percent_lacking_plumbing. The columns plumbing and percent_lacking_plumbing have a small number of missing values—less than 0.3%—which does not significantly impact the overall analysis.
 
