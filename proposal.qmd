@@ -66,42 +66,55 @@ For the final project, we selected the U.S. Water Insecurity dataset from TidyTu
 
 The two datastes includes the following variables:
 
--   <code>geoid</code>: The U.S. Census Bureau ACS county id.
+-   `geoid`: The U.S. Census Bureau ACS county id.
 
--   <code>name</code>: The U.S. Census Bureau ACS county name.
+-   `name`: The U.S. Census Bureau ACS county name.
 
--   <code>year</code>: The year of U.S. Census Bureau ACS sample.
+-   `year`: The year of U.S. Census Bureau ACS sample.
 
--   <code>geometry</code>: The county geographic boundaries.
+-   `geometry`: The county geographic boundaries.
 
--   <code>total_pop</code>: The total population.
+-   `total_pop`: The total population.
 
--   <code>plumbing</code>: The total owner occupied households lacking plumbing facilities.
+-   `plumbing`: The total owner occupied households lacking plumbing facilities.
 
--   <code>percent_lacking_plumbing</code>: The percent of population lacking plumbing facilities.
+-   `percent_lacking_plumbing`: The percent of population lacking plumbing facilities.
 
-    ## water_insecurity_2022_data
+## water_insecurity_2022_data
 
 <details>
-  <summary>Code: Water Insecurity 2022 data</summary>
+  <summary>Code: Water Insecurity 2022 data analysis</summary>
 ```{r, echo=TRUE, results='hide'}
-# Load required packages
 
 # Create summary table
 table1 <- tibble(
-  variable = c("geoid", "name", "geometry",
-               "year", "total_pop", "plumbing",
-               "percent_lacking_plumbing"),
-  types = c("character", "character", "character",
-            "numeric", "numeric", "numeric", "numeric"),
+  variable = c(
+    "geoid",
+    "name",
+    "geometry",
+    "year",
+    "total_pop",
+    "plumbing",
+    "percent_lacking_plumbing"
+  ),
+  types = c(
+    "character",
+    "character",
+    "character",
+    "numeric",
+    "numeric",
+    "numeric",
+    "numeric"
+  ),
   missing_count = c(0, 0, 0, 0, 0, 2, 2),
   missing_percent = c(0, 0, 0, 0, 0, 0.23585, 0.23585)
 )
-
-gt_table <- table1 |>
+# - format the table with the gt library
+gt_table_1 <- table1 |>
   gt() |>
   tab_header(
-    title = "Table 1: Variable Summary for Plumbing Dataset"
+    #<--- format as markdown
+    title = md("Table 1: Variable Summary `water_insecurity_2022_dat`") #<--- format as markdown
   ) |>
   fmt(
     columns = missing_percent,
@@ -129,27 +142,80 @@ gt_table <- table1 |>
 
 ```{r, echo=FALSE}
 # Now render the table by printing the gt object
-gt_table
+gt_table_1
 ```
 
 ## water_insecurity_2023_data
 
+
+<details>
+  <summary>Code: Water Insecurity 2023 data analysis</summary>
 ```{r}
-    table2 <- tibble(
-      variable = c("geoid", "name","geometry",
-                   "year","total_pop","plumbing",
-                   "percent_lacking_plumbing"),
-      types = c("character", "character","character", 
-                "numeric","numeric","numeric","numeric"),
-      missing_count = c(0,0,0,0,0,1,1),
-      missing_percent = c(0,0,0,0,0,0.1171,0.1171))
-    table2
+# - manually create a table..
+table2 <- tibble(
+  variable = c(
+    "geoid",
+    "name",
+    "geometry",
+    "year",
+    "total_pop",
+    "plumbing",
+    "percent_lacking_plumbing"
+  ),
+  types = c(
+    "character",
+    "character",
+    "character",
+    "numeric",
+    "numeric",
+    "numeric",
+    "numeric"
+  ),
+  missing_count = c(0, 0, 0, 0, 0, 1, 1),
+  missing_percent = c(0, 0, 0, 0, 0, 0.1171, 0.1171)
+)
+# - format the table with the gt library
+gt_table_2 <- table2 |>
+  gt() |>
+  tab_header(
+    #<--- format as markdown
+    title = md("Table 2: Variable Summary `water_insecurity_2023_dat`") 
+  ) |>
+  fmt(
+    columns = missing_percent,
+    fns = function(x)
+      paste0(formatC(x, format = "f", digits = 3), " %")
+  ) |>
+  cols_label(
+    variable = "Variable Name",
+    types = "Type",
+    missing_count = "Missing Count",
+    missing_percent = "Missing (%)"
+  ) |>
+  tab_style(
+    style = cell_text(weight = "bold", align = "center"),
+    locations = cells_column_labels(everything())
+  ) |>
+  tab_style(style = cell_text(align = "center"),
+            locations = cells_body(everything())) |>
+  tab_options(
+    table.font.size = "small",
+    column_labels.font.size = "medium",
+    table.width = pct(100)     # <-- full width of container
+  )
+```
+</details>
+
+
+```{r, echo=FALSE}
+# Now render the table by printing the gt object
+gt_table_2
 ```
 
-    These two datasets contain data on the lack of complete indoor plumbing in U.S. counties for the years 2022 and 2023. The 2022 dataset includes information from 848 counties, while the 2023 dataset includes 854 counties. Each dataset contains seven variables: geoid, name, geometry, year, total_pop, plumbing, percent_lacking_plumbing. The columns plumbing and percent_lacking_plumbing have a small number of missing values—less than 0.3%—which does not significantly impact the overall analysis.
+## Synopsis of data quality:
+These two datasets contain data on the lack of complete indoor plumbing in U.S. counties for the years 2022 and 2023. The 2022 dataset includes information from 848 counties, while the 2023 dataset includes 854 counties. Each dataset contains seven variables: geoid, name, geometry, year, total_pop, plumbing, percent_lacking_plumbing. The columns plumbing and percent_lacking_plumbing have a small number of missing values—less than 0.3%—which does not significantly impact the overall analysis.
 
 ## Why we chose this data-set:
-
 We chose this dataset because water insecurity is a critical public health issue that may be influenced by various social vulnerability indicators. The data, sourced from the American Community Survey (ACS), provides county-level information on indoor plumbing insecurity for both 2022 and 2023. Since it covers multiple counties and spans two years, it is well-suited for analyzing year-over-year trends and regional disparities across the U.S. Additionally, the dataset is clean, complete, well-documented, and ideal for collaborative analysis and visualization.
 
 ## Question:

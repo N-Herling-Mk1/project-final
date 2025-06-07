@@ -4809,7 +4809,9 @@ vertical-align: -.125em;
   <li><a href="#packages-setup" id="toc-packages-setup" class="nav-link active" data-scroll-target="#packages-setup">Packages Setup</a></li>
   <li><a href="#dataset" id="toc-dataset" class="nav-link" data-scroll-target="#dataset">Dataset</a></li>
   <li><a href="#about-the-acs-plumbing-data" id="toc-about-the-acs-plumbing-data" class="nav-link" data-scroll-target="#about-the-acs-plumbing-data">About the ACS Plumbing Data</a></li>
+  <li><a href="#water_insecurity_2022_data" id="toc-water_insecurity_2022_data" class="nav-link" data-scroll-target="#water_insecurity_2022_data">water_insecurity_2022_data</a></li>
   <li><a href="#water_insecurity_2023_data" id="toc-water_insecurity_2023_data" class="nav-link" data-scroll-target="#water_insecurity_2023_data">water_insecurity_2023_data</a></li>
+  <li><a href="#synopsis-of-data-quality" id="toc-synopsis-of-data-quality" class="nav-link" data-scroll-target="#synopsis-of-data-quality">Synopsis of data quality:</a></li>
   <li><a href="#why-we-chose-this-data-set" id="toc-why-we-chose-this-data-set" class="nav-link" data-scroll-target="#why-we-chose-this-data-set">Why we chose this data-set:</a></li>
   <li><a href="#question" id="toc-question" class="nav-link" data-scroll-target="#question">Question:</a></li>
   <li><a href="#analysis-plan" id="toc-analysis-plan" class="nav-link" data-scroll-target="#analysis-plan">Analysis plan</a></li>
@@ -4930,71 +4932,85 @@ $ percent_lacking_plumbing &lt;dbl&gt; 0.106900401, 0.027659457, 0.054308317, 0.
 <li><p><code>geometry</code>: The county geographic boundaries.</p></li>
 <li><p><code>total_pop</code>: The total population.</p></li>
 <li><p><code>plumbing</code>: The total owner occupied households lacking plumbing facilities.</p></li>
-<li><p><code>percent_lacking_plumbing</code>: The percent of population lacking plumbing facilities.</p>
-<h2 id="water_insecurity_2022_data" class="anchored">water_insecurity_2022_data</h2></li>
+<li><p><code>percent_lacking_plumbing</code>: The percent of population lacking plumbing facilities.</p></li>
 </ul>
+</section>
+<section id="water_insecurity_2022_data" class="level2">
+<h2 class="anchored" data-anchor-id="water_insecurity_2022_data">water_insecurity_2022_data</h2>
 <details>
 <summary>
-Code: Water Insecurity 2022 data
+Code: Water Insecurity 2022 data analysis
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># Load required packages</span></span>
-<span id="cb6-2"><a href="#cb6-2"></a></span>
-<span id="cb6-3"><a href="#cb6-3"></a><span class="co"># Create summary table</span></span>
-<span id="cb6-4"><a href="#cb6-4"></a>table1 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb6-5"><a href="#cb6-5"></a>  <span class="at">variable =</span> <span class="fu">c</span>(<span class="st">&quot;geoid&quot;</span>, <span class="st">&quot;name&quot;</span>, <span class="st">&quot;geometry&quot;</span>,</span>
-<span id="cb6-6"><a href="#cb6-6"></a>               <span class="st">&quot;year&quot;</span>, <span class="st">&quot;total_pop&quot;</span>, <span class="st">&quot;plumbing&quot;</span>,</span>
-<span id="cb6-7"><a href="#cb6-7"></a>               <span class="st">&quot;percent_lacking_plumbing&quot;</span>),</span>
-<span id="cb6-8"><a href="#cb6-8"></a>  <span class="at">types =</span> <span class="fu">c</span>(<span class="st">&quot;character&quot;</span>, <span class="st">&quot;character&quot;</span>, <span class="st">&quot;character&quot;</span>,</span>
-<span id="cb6-9"><a href="#cb6-9"></a>            <span class="st">&quot;numeric&quot;</span>, <span class="st">&quot;numeric&quot;</span>, <span class="st">&quot;numeric&quot;</span>, <span class="st">&quot;numeric&quot;</span>),</span>
-<span id="cb6-10"><a href="#cb6-10"></a>  <span class="at">missing_count =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">2</span>),</span>
-<span id="cb6-11"><a href="#cb6-11"></a>  <span class="at">missing_percent =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">0.23585</span>, <span class="fl">0.23585</span>)</span>
-<span id="cb6-12"><a href="#cb6-12"></a>)</span>
-<span id="cb6-13"><a href="#cb6-13"></a></span>
-<span id="cb6-14"><a href="#cb6-14"></a>gt_table <span class="ot">&lt;-</span> table1 <span class="sc">|&gt;</span></span>
-<span id="cb6-15"><a href="#cb6-15"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
-<span id="cb6-16"><a href="#cb6-16"></a>  <span class="fu">tab_header</span>(</span>
-<span id="cb6-17"><a href="#cb6-17"></a>    <span class="at">title =</span> <span class="st">&quot;Table 1: Variable Summary for Plumbing Dataset&quot;</span></span>
-<span id="cb6-18"><a href="#cb6-18"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb6-19"><a href="#cb6-19"></a>  <span class="fu">fmt</span>(</span>
-<span id="cb6-20"><a href="#cb6-20"></a>    <span class="at">columns =</span> missing_percent,</span>
-<span id="cb6-21"><a href="#cb6-21"></a>    <span class="at">fns =</span> <span class="cf">function</span>(x) <span class="fu">paste0</span>(<span class="fu">formatC</span>(x, <span class="at">format =</span> <span class="st">&quot;f&quot;</span>, <span class="at">digits =</span> <span class="dv">3</span>), <span class="st">&quot; %&quot;</span>)</span>
-<span id="cb6-22"><a href="#cb6-22"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb6-23"><a href="#cb6-23"></a>  <span class="fu">cols_label</span>(</span>
-<span id="cb6-24"><a href="#cb6-24"></a>    <span class="at">variable =</span> <span class="st">&quot;Variable Name&quot;</span>,</span>
-<span id="cb6-25"><a href="#cb6-25"></a>    <span class="at">types =</span> <span class="st">&quot;Type&quot;</span>,</span>
-<span id="cb6-26"><a href="#cb6-26"></a>    <span class="at">missing_count =</span> <span class="st">&quot;Missing Count&quot;</span>,</span>
-<span id="cb6-27"><a href="#cb6-27"></a>    <span class="at">missing_percent =</span> <span class="st">&quot;Missing (%)&quot;</span></span>
-<span id="cb6-28"><a href="#cb6-28"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb6-29"><a href="#cb6-29"></a>  <span class="fu">tab_style</span>(</span>
-<span id="cb6-30"><a href="#cb6-30"></a>    <span class="at">style =</span> <span class="fu">cell_text</span>(<span class="at">weight =</span> <span class="st">&quot;bold&quot;</span>, <span class="at">align =</span> <span class="st">&quot;center&quot;</span>),</span>
-<span id="cb6-31"><a href="#cb6-31"></a>    <span class="at">locations =</span> <span class="fu">cells_column_labels</span>(<span class="fu">everything</span>())</span>
-<span id="cb6-32"><a href="#cb6-32"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb6-33"><a href="#cb6-33"></a>  <span class="fu">tab_style</span>(<span class="at">style =</span> <span class="fu">cell_text</span>(<span class="at">align =</span> <span class="st">&quot;center&quot;</span>),</span>
-<span id="cb6-34"><a href="#cb6-34"></a>            <span class="at">locations =</span> <span class="fu">cells_body</span>(<span class="fu">everything</span>())) <span class="sc">|&gt;</span> </span>
-<span id="cb6-35"><a href="#cb6-35"></a>  <span class="fu">tab_options</span>(</span>
-<span id="cb6-36"><a href="#cb6-36"></a>    <span class="at">table.font.size =</span> <span class="st">&quot;small&quot;</span>,</span>
-<span id="cb6-37"><a href="#cb6-37"></a>    <span class="at">column_labels.font.size =</span> <span class="st">&quot;medium&quot;</span>,</span>
-<span id="cb6-38"><a href="#cb6-38"></a>    <span class="at">table.width =</span> <span class="fu">pct</span>(<span class="dv">100</span>)     <span class="co"># &lt;-- full width of container</span></span>
-<span id="cb6-39"><a href="#cb6-39"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># Create summary table</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>table1 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb6-3"><a href="#cb6-3"></a>  <span class="at">variable =</span> <span class="fu">c</span>(</span>
+<span id="cb6-4"><a href="#cb6-4"></a>    <span class="st">&quot;geoid&quot;</span>,</span>
+<span id="cb6-5"><a href="#cb6-5"></a>    <span class="st">&quot;name&quot;</span>,</span>
+<span id="cb6-6"><a href="#cb6-6"></a>    <span class="st">&quot;geometry&quot;</span>,</span>
+<span id="cb6-7"><a href="#cb6-7"></a>    <span class="st">&quot;year&quot;</span>,</span>
+<span id="cb6-8"><a href="#cb6-8"></a>    <span class="st">&quot;total_pop&quot;</span>,</span>
+<span id="cb6-9"><a href="#cb6-9"></a>    <span class="st">&quot;plumbing&quot;</span>,</span>
+<span id="cb6-10"><a href="#cb6-10"></a>    <span class="st">&quot;percent_lacking_plumbing&quot;</span></span>
+<span id="cb6-11"><a href="#cb6-11"></a>  ),</span>
+<span id="cb6-12"><a href="#cb6-12"></a>  <span class="at">types =</span> <span class="fu">c</span>(</span>
+<span id="cb6-13"><a href="#cb6-13"></a>    <span class="st">&quot;character&quot;</span>,</span>
+<span id="cb6-14"><a href="#cb6-14"></a>    <span class="st">&quot;character&quot;</span>,</span>
+<span id="cb6-15"><a href="#cb6-15"></a>    <span class="st">&quot;character&quot;</span>,</span>
+<span id="cb6-16"><a href="#cb6-16"></a>    <span class="st">&quot;numeric&quot;</span>,</span>
+<span id="cb6-17"><a href="#cb6-17"></a>    <span class="st">&quot;numeric&quot;</span>,</span>
+<span id="cb6-18"><a href="#cb6-18"></a>    <span class="st">&quot;numeric&quot;</span>,</span>
+<span id="cb6-19"><a href="#cb6-19"></a>    <span class="st">&quot;numeric&quot;</span></span>
+<span id="cb6-20"><a href="#cb6-20"></a>  ),</span>
+<span id="cb6-21"><a href="#cb6-21"></a>  <span class="at">missing_count =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">2</span>),</span>
+<span id="cb6-22"><a href="#cb6-22"></a>  <span class="at">missing_percent =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">0.23585</span>, <span class="fl">0.23585</span>)</span>
+<span id="cb6-23"><a href="#cb6-23"></a>)</span>
+<span id="cb6-24"><a href="#cb6-24"></a><span class="co"># - format the table with the gt library</span></span>
+<span id="cb6-25"><a href="#cb6-25"></a>gt_table_1 <span class="ot">&lt;-</span> table1 <span class="sc">|&gt;</span></span>
+<span id="cb6-26"><a href="#cb6-26"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb6-27"><a href="#cb6-27"></a>  <span class="fu">tab_header</span>(</span>
+<span id="cb6-28"><a href="#cb6-28"></a>    <span class="co">#&lt;--- format as markdown</span></span>
+<span id="cb6-29"><a href="#cb6-29"></a>    <span class="at">title =</span> <span class="fu">md</span>(<span class="st">&quot;Table 1: Variable Summary `water_insecurity_2022_dat`&quot;</span>) <span class="co">#&lt;--- format as markdown</span></span>
+<span id="cb6-30"><a href="#cb6-30"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb6-31"><a href="#cb6-31"></a>  <span class="fu">fmt</span>(</span>
+<span id="cb6-32"><a href="#cb6-32"></a>    <span class="at">columns =</span> missing_percent,</span>
+<span id="cb6-33"><a href="#cb6-33"></a>    <span class="at">fns =</span> <span class="cf">function</span>(x) <span class="fu">paste0</span>(<span class="fu">formatC</span>(x, <span class="at">format =</span> <span class="st">&quot;f&quot;</span>, <span class="at">digits =</span> <span class="dv">3</span>), <span class="st">&quot; %&quot;</span>)</span>
+<span id="cb6-34"><a href="#cb6-34"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb6-35"><a href="#cb6-35"></a>  <span class="fu">cols_label</span>(</span>
+<span id="cb6-36"><a href="#cb6-36"></a>    <span class="at">variable =</span> <span class="st">&quot;Variable Name&quot;</span>,</span>
+<span id="cb6-37"><a href="#cb6-37"></a>    <span class="at">types =</span> <span class="st">&quot;Type&quot;</span>,</span>
+<span id="cb6-38"><a href="#cb6-38"></a>    <span class="at">missing_count =</span> <span class="st">&quot;Missing Count&quot;</span>,</span>
+<span id="cb6-39"><a href="#cb6-39"></a>    <span class="at">missing_percent =</span> <span class="st">&quot;Missing (%)&quot;</span></span>
+<span id="cb6-40"><a href="#cb6-40"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb6-41"><a href="#cb6-41"></a>  <span class="fu">tab_style</span>(</span>
+<span id="cb6-42"><a href="#cb6-42"></a>    <span class="at">style =</span> <span class="fu">cell_text</span>(<span class="at">weight =</span> <span class="st">&quot;bold&quot;</span>, <span class="at">align =</span> <span class="st">&quot;center&quot;</span>),</span>
+<span id="cb6-43"><a href="#cb6-43"></a>    <span class="at">locations =</span> <span class="fu">cells_column_labels</span>(<span class="fu">everything</span>())</span>
+<span id="cb6-44"><a href="#cb6-44"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb6-45"><a href="#cb6-45"></a>  <span class="fu">tab_style</span>(<span class="at">style =</span> <span class="fu">cell_text</span>(<span class="at">align =</span> <span class="st">&quot;center&quot;</span>),</span>
+<span id="cb6-46"><a href="#cb6-46"></a>            <span class="at">locations =</span> <span class="fu">cells_body</span>(<span class="fu">everything</span>())) <span class="sc">|&gt;</span> </span>
+<span id="cb6-47"><a href="#cb6-47"></a>  <span class="fu">tab_options</span>(</span>
+<span id="cb6-48"><a href="#cb6-48"></a>    <span class="at">table.font.size =</span> <span class="st">&quot;small&quot;</span>,</span>
+<span id="cb6-49"><a href="#cb6-49"></a>    <span class="at">column_labels.font.size =</span> <span class="st">&quot;medium&quot;</span>,</span>
+<span id="cb6-50"><a href="#cb6-50"></a>    <span class="at">table.width =</span> <span class="fu">pct</span>(<span class="dv">100</span>)     <span class="co"># &lt;-- full width of container</span></span>
+<span id="cb6-51"><a href="#cb6-51"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </details>
 <div class="cell">
 <div class="cell-output-display">
-<div id="mxvuozrtor" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#mxvuozrtor table {
+<div id="nveeixrmht" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#nveeixrmht table {
 font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 -webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;
 }
-#mxvuozrtor thead, #mxvuozrtor tbody, #mxvuozrtor tfoot, #mxvuozrtor tr, #mxvuozrtor td, #mxvuozrtor th {
+#nveeixrmht thead, #nveeixrmht tbody, #nveeixrmht tfoot, #nveeixrmht tr, #nveeixrmht td, #nveeixrmht th {
 border-style: none;
 }
-#mxvuozrtor p {
+#nveeixrmht p {
 margin: 0;
 padding: 0;
 }
-#mxvuozrtor .gt_table {
+#nveeixrmht .gt_table {
 display: table;
 border-collapse: collapse;
 line-height: normal;
@@ -5019,11 +5035,11 @@ border-left-style: none;
 border-left-width: 2px;
 border-left-color: #D3D3D3;
 }
-#mxvuozrtor .gt_caption {
+#nveeixrmht .gt_caption {
 padding-top: 4px;
 padding-bottom: 4px;
 }
-#mxvuozrtor .gt_title {
+#nveeixrmht .gt_title {
 color: #333333;
 font-size: 125%;
 font-weight: initial;
@@ -5034,7 +5050,7 @@ padding-right: 5px;
 border-bottom-color: #FFFFFF;
 border-bottom-width: 0;
 }
-#mxvuozrtor .gt_subtitle {
+#nveeixrmht .gt_subtitle {
 color: #333333;
 font-size: 85%;
 font-weight: initial;
@@ -5045,7 +5061,7 @@ padding-right: 5px;
 border-top-color: #FFFFFF;
 border-top-width: 0;
 }
-#mxvuozrtor .gt_heading {
+#nveeixrmht .gt_heading {
 background-color: #FFFFFF;
 text-align: center;
 border-bottom-color: #FFFFFF;
@@ -5056,12 +5072,12 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#mxvuozrtor .gt_bottom_border {
+#nveeixrmht .gt_bottom_border {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#mxvuozrtor .gt_col_headings {
+#nveeixrmht .gt_col_headings {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -5075,7 +5091,7 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#mxvuozrtor .gt_col_heading {
+#nveeixrmht .gt_col_heading {
 color: #333333;
 background-color: #FFFFFF;
 font-size: medium;
@@ -5094,7 +5110,7 @@ padding-left: 5px;
 padding-right: 5px;
 overflow-x: hidden;
 }
-#mxvuozrtor .gt_column_spanner_outer {
+#nveeixrmht .gt_column_spanner_outer {
 color: #333333;
 background-color: #FFFFFF;
 font-size: medium;
@@ -5105,13 +5121,13 @@ padding-bottom: 0;
 padding-left: 4px;
 padding-right: 4px;
 }
-#mxvuozrtor .gt_column_spanner_outer:first-child {
+#nveeixrmht .gt_column_spanner_outer:first-child {
 padding-left: 0;
 }
-#mxvuozrtor .gt_column_spanner_outer:last-child {
+#nveeixrmht .gt_column_spanner_outer:last-child {
 padding-right: 0;
 }
-#mxvuozrtor .gt_column_spanner {
+#nveeixrmht .gt_column_spanner {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
@@ -5122,10 +5138,10 @@ overflow-x: hidden;
 display: inline-block;
 width: 100%;
 }
-#mxvuozrtor .gt_spanner_row {
+#nveeixrmht .gt_spanner_row {
 border-bottom-style: hidden;
 }
-#mxvuozrtor .gt_group_heading {
+#nveeixrmht .gt_group_heading {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -5150,7 +5166,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 text-align: left;
 }
-#mxvuozrtor .gt_empty_group_heading {
+#nveeixrmht .gt_empty_group_heading {
 padding: 0.5px;
 color: #333333;
 background-color: #FFFFFF;
@@ -5164,13 +5180,13 @@ border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 vertical-align: middle;
 }
-#mxvuozrtor .gt_from_md > :first-child {
+#nveeixrmht .gt_from_md > :first-child {
 margin-top: 0;
 }
-#mxvuozrtor .gt_from_md > :last-child {
+#nveeixrmht .gt_from_md > :last-child {
 margin-bottom: 0;
 }
-#mxvuozrtor .gt_row {
+#nveeixrmht .gt_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -5188,7 +5204,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 overflow-x: hidden;
 }
-#mxvuozrtor .gt_stub {
+#nveeixrmht .gt_stub {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -5200,7 +5216,7 @@ border-right-color: #D3D3D3;
 padding-left: 5px;
 padding-right: 5px;
 }
-#mxvuozrtor .gt_stub_row_group {
+#nveeixrmht .gt_stub_row_group {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -5213,13 +5229,13 @@ padding-left: 5px;
 padding-right: 5px;
 vertical-align: top;
 }
-#mxvuozrtor .gt_row_group_first td {
+#nveeixrmht .gt_row_group_first td {
 border-top-width: 2px;
 }
-#mxvuozrtor .gt_row_group_first th {
+#nveeixrmht .gt_row_group_first th {
 border-top-width: 2px;
 }
-#mxvuozrtor .gt_summary_row {
+#nveeixrmht .gt_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -5228,14 +5244,14 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#mxvuozrtor .gt_first_summary_row {
+#nveeixrmht .gt_first_summary_row {
 border-top-style: solid;
 border-top-color: #D3D3D3;
 }
-#mxvuozrtor .gt_first_summary_row.thick {
+#nveeixrmht .gt_first_summary_row.thick {
 border-top-width: 2px;
 }
-#mxvuozrtor .gt_last_summary_row {
+#nveeixrmht .gt_last_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -5244,7 +5260,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#mxvuozrtor .gt_grand_summary_row {
+#nveeixrmht .gt_grand_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -5253,7 +5269,7 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#mxvuozrtor .gt_first_grand_summary_row {
+#nveeixrmht .gt_first_grand_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -5262,7 +5278,7 @@ border-top-style: double;
 border-top-width: 6px;
 border-top-color: #D3D3D3;
 }
-#mxvuozrtor .gt_last_grand_summary_row_top {
+#nveeixrmht .gt_last_grand_summary_row_top {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -5271,10 +5287,10 @@ border-bottom-style: double;
 border-bottom-width: 6px;
 border-bottom-color: #D3D3D3;
 }
-#mxvuozrtor .gt_striped {
+#nveeixrmht .gt_striped {
 background-color: rgba(128, 128, 128, 0.05);
 }
-#mxvuozrtor .gt_table_body {
+#nveeixrmht .gt_table_body {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -5282,7 +5298,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#mxvuozrtor .gt_footnotes {
+#nveeixrmht .gt_footnotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -5295,7 +5311,7 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#mxvuozrtor .gt_footnote {
+#nveeixrmht .gt_footnote {
 margin: 0px;
 font-size: 90%;
 padding-top: 4px;
@@ -5303,7 +5319,7 @@ padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#mxvuozrtor .gt_sourcenotes {
+#nveeixrmht .gt_sourcenotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -5316,64 +5332,64 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#mxvuozrtor .gt_sourcenote {
+#nveeixrmht .gt_sourcenote {
 font-size: 90%;
 padding-top: 4px;
 padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#mxvuozrtor .gt_left {
+#nveeixrmht .gt_left {
 text-align: left;
 }
-#mxvuozrtor .gt_center {
+#nveeixrmht .gt_center {
 text-align: center;
 }
-#mxvuozrtor .gt_right {
+#nveeixrmht .gt_right {
 text-align: right;
 font-variant-numeric: tabular-nums;
 }
-#mxvuozrtor .gt_font_normal {
+#nveeixrmht .gt_font_normal {
 font-weight: normal;
 }
-#mxvuozrtor .gt_font_bold {
+#nveeixrmht .gt_font_bold {
 font-weight: bold;
 }
-#mxvuozrtor .gt_font_italic {
+#nveeixrmht .gt_font_italic {
 font-style: italic;
 }
-#mxvuozrtor .gt_super {
+#nveeixrmht .gt_super {
 font-size: 65%;
 }
-#mxvuozrtor .gt_footnote_marks {
+#nveeixrmht .gt_footnote_marks {
 font-size: 75%;
 vertical-align: 0.4em;
 position: initial;
 }
-#mxvuozrtor .gt_asterisk {
+#nveeixrmht .gt_asterisk {
 font-size: 100%;
 vertical-align: 0;
 }
-#mxvuozrtor .gt_indent_1 {
+#nveeixrmht .gt_indent_1 {
 text-indent: 5px;
 }
-#mxvuozrtor .gt_indent_2 {
+#nveeixrmht .gt_indent_2 {
 text-indent: 10px;
 }
-#mxvuozrtor .gt_indent_3 {
+#nveeixrmht .gt_indent_3 {
 text-indent: 15px;
 }
-#mxvuozrtor .gt_indent_4 {
+#nveeixrmht .gt_indent_4 {
 text-indent: 20px;
 }
-#mxvuozrtor .gt_indent_5 {
+#nveeixrmht .gt_indent_5 {
 text-indent: 25px;
 }
-#mxvuozrtor .katex-display {
+#nveeixrmht .katex-display {
 display: inline-flex !important;
 margin-bottom: 0.75em !important;
 }
-#mxvuozrtor div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#nveeixrmht div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
 height: 0px !important;
 }
 </style>
@@ -5381,7 +5397,7 @@ height: 0px !important;
 <table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <thead>
 <tr class="gt_heading header">
-<th colspan="4" class="gt_heading gt_title gt_font_normal gt_bottom_border" style="text-align: center;">Table 1: Variable Summary for Plumbing Dataset</th>
+<th colspan="4" class="gt_heading gt_title gt_font_normal gt_bottom_border" style="text-align: center;">Table 1: Variable Summary <code>water_insecurity_2022_dat</code></th>
 </tr>
 <tr class="gt_col_headings even">
 <th id="variable" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="text-align: center; font-weight: bold;" scope="col">Variable Name</th>
@@ -5442,30 +5458,529 @@ height: 0px !important;
 </section>
 <section id="water_insecurity_2023_data" class="level2">
 <h2 class="anchored" data-anchor-id="water_insecurity_2023_data">water_insecurity_2023_data</h2>
+<details>
+<summary>
+Code: Water Insecurity 2023 data analysis
+</summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>    table2 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb7-2"><a href="#cb7-2"></a>      <span class="at">variable =</span> <span class="fu">c</span>(<span class="st">&quot;geoid&quot;</span>, <span class="st">&quot;name&quot;</span>,<span class="st">&quot;geometry&quot;</span>,</span>
-<span id="cb7-3"><a href="#cb7-3"></a>                   <span class="st">&quot;year&quot;</span>,<span class="st">&quot;total_pop&quot;</span>,<span class="st">&quot;plumbing&quot;</span>,</span>
-<span id="cb7-4"><a href="#cb7-4"></a>                   <span class="st">&quot;percent_lacking_plumbing&quot;</span>),</span>
-<span id="cb7-5"><a href="#cb7-5"></a>      <span class="at">types =</span> <span class="fu">c</span>(<span class="st">&quot;character&quot;</span>, <span class="st">&quot;character&quot;</span>,<span class="st">&quot;character&quot;</span>, </span>
-<span id="cb7-6"><a href="#cb7-6"></a>                <span class="st">&quot;numeric&quot;</span>,<span class="st">&quot;numeric&quot;</span>,<span class="st">&quot;numeric&quot;</span>,<span class="st">&quot;numeric&quot;</span>),</span>
-<span id="cb7-7"><a href="#cb7-7"></a>      <span class="at">missing_count =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>),</span>
-<span id="cb7-8"><a href="#cb7-8"></a>      <span class="at">missing_percent =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="fl">0.1171</span>,<span class="fl">0.1171</span>))</span>
-<span id="cb7-9"><a href="#cb7-9"></a>    table2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 7 × 4
-  variable                 types     missing_count missing_percent
-  &lt;chr&gt;                    &lt;chr&gt;             &lt;dbl&gt;           &lt;dbl&gt;
-1 geoid                    character             0           0    
-2 name                     character             0           0    
-3 geometry                 character             0           0    
-4 year                     numeric               0           0    
-5 total_pop                numeric               0           0    
-6 plumbing                 numeric               1           0.117
-7 percent_lacking_plumbing numeric               1           0.117</code></pre>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># - manually create a table..</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>table2 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb7-3"><a href="#cb7-3"></a>  <span class="at">variable =</span> <span class="fu">c</span>(</span>
+<span id="cb7-4"><a href="#cb7-4"></a>    <span class="st">&quot;geoid&quot;</span>,</span>
+<span id="cb7-5"><a href="#cb7-5"></a>    <span class="st">&quot;name&quot;</span>,</span>
+<span id="cb7-6"><a href="#cb7-6"></a>    <span class="st">&quot;geometry&quot;</span>,</span>
+<span id="cb7-7"><a href="#cb7-7"></a>    <span class="st">&quot;year&quot;</span>,</span>
+<span id="cb7-8"><a href="#cb7-8"></a>    <span class="st">&quot;total_pop&quot;</span>,</span>
+<span id="cb7-9"><a href="#cb7-9"></a>    <span class="st">&quot;plumbing&quot;</span>,</span>
+<span id="cb7-10"><a href="#cb7-10"></a>    <span class="st">&quot;percent_lacking_plumbing&quot;</span></span>
+<span id="cb7-11"><a href="#cb7-11"></a>  ),</span>
+<span id="cb7-12"><a href="#cb7-12"></a>  <span class="at">types =</span> <span class="fu">c</span>(</span>
+<span id="cb7-13"><a href="#cb7-13"></a>    <span class="st">&quot;character&quot;</span>,</span>
+<span id="cb7-14"><a href="#cb7-14"></a>    <span class="st">&quot;character&quot;</span>,</span>
+<span id="cb7-15"><a href="#cb7-15"></a>    <span class="st">&quot;character&quot;</span>,</span>
+<span id="cb7-16"><a href="#cb7-16"></a>    <span class="st">&quot;numeric&quot;</span>,</span>
+<span id="cb7-17"><a href="#cb7-17"></a>    <span class="st">&quot;numeric&quot;</span>,</span>
+<span id="cb7-18"><a href="#cb7-18"></a>    <span class="st">&quot;numeric&quot;</span>,</span>
+<span id="cb7-19"><a href="#cb7-19"></a>    <span class="st">&quot;numeric&quot;</span></span>
+<span id="cb7-20"><a href="#cb7-20"></a>  ),</span>
+<span id="cb7-21"><a href="#cb7-21"></a>  <span class="at">missing_count =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>),</span>
+<span id="cb7-22"><a href="#cb7-22"></a>  <span class="at">missing_percent =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">0.1171</span>, <span class="fl">0.1171</span>)</span>
+<span id="cb7-23"><a href="#cb7-23"></a>)</span>
+<span id="cb7-24"><a href="#cb7-24"></a><span class="co"># - format the table with the gt library</span></span>
+<span id="cb7-25"><a href="#cb7-25"></a>gt_table_2 <span class="ot">&lt;-</span> table2 <span class="sc">|&gt;</span></span>
+<span id="cb7-26"><a href="#cb7-26"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb7-27"><a href="#cb7-27"></a>  <span class="fu">tab_header</span>(</span>
+<span id="cb7-28"><a href="#cb7-28"></a>    <span class="co">#&lt;--- format as markdown</span></span>
+<span id="cb7-29"><a href="#cb7-29"></a>    <span class="at">title =</span> <span class="fu">md</span>(<span class="st">&quot;Table 2: Variable Summary `water_insecurity_2023_dat`&quot;</span>) </span>
+<span id="cb7-30"><a href="#cb7-30"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb7-31"><a href="#cb7-31"></a>  <span class="fu">fmt</span>(</span>
+<span id="cb7-32"><a href="#cb7-32"></a>    <span class="at">columns =</span> missing_percent,</span>
+<span id="cb7-33"><a href="#cb7-33"></a>    <span class="at">fns =</span> <span class="cf">function</span>(x)</span>
+<span id="cb7-34"><a href="#cb7-34"></a>      <span class="fu">paste0</span>(<span class="fu">formatC</span>(x, <span class="at">format =</span> <span class="st">&quot;f&quot;</span>, <span class="at">digits =</span> <span class="dv">3</span>), <span class="st">&quot; %&quot;</span>)</span>
+<span id="cb7-35"><a href="#cb7-35"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb7-36"><a href="#cb7-36"></a>  <span class="fu">cols_label</span>(</span>
+<span id="cb7-37"><a href="#cb7-37"></a>    <span class="at">variable =</span> <span class="st">&quot;Variable Name&quot;</span>,</span>
+<span id="cb7-38"><a href="#cb7-38"></a>    <span class="at">types =</span> <span class="st">&quot;Type&quot;</span>,</span>
+<span id="cb7-39"><a href="#cb7-39"></a>    <span class="at">missing_count =</span> <span class="st">&quot;Missing Count&quot;</span>,</span>
+<span id="cb7-40"><a href="#cb7-40"></a>    <span class="at">missing_percent =</span> <span class="st">&quot;Missing (%)&quot;</span></span>
+<span id="cb7-41"><a href="#cb7-41"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb7-42"><a href="#cb7-42"></a>  <span class="fu">tab_style</span>(</span>
+<span id="cb7-43"><a href="#cb7-43"></a>    <span class="at">style =</span> <span class="fu">cell_text</span>(<span class="at">weight =</span> <span class="st">&quot;bold&quot;</span>, <span class="at">align =</span> <span class="st">&quot;center&quot;</span>),</span>
+<span id="cb7-44"><a href="#cb7-44"></a>    <span class="at">locations =</span> <span class="fu">cells_column_labels</span>(<span class="fu">everything</span>())</span>
+<span id="cb7-45"><a href="#cb7-45"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb7-46"><a href="#cb7-46"></a>  <span class="fu">tab_style</span>(<span class="at">style =</span> <span class="fu">cell_text</span>(<span class="at">align =</span> <span class="st">&quot;center&quot;</span>),</span>
+<span id="cb7-47"><a href="#cb7-47"></a>            <span class="at">locations =</span> <span class="fu">cells_body</span>(<span class="fu">everything</span>())) <span class="sc">|&gt;</span></span>
+<span id="cb7-48"><a href="#cb7-48"></a>  <span class="fu">tab_options</span>(</span>
+<span id="cb7-49"><a href="#cb7-49"></a>    <span class="at">table.font.size =</span> <span class="st">&quot;small&quot;</span>,</span>
+<span id="cb7-50"><a href="#cb7-50"></a>    <span class="at">column_labels.font.size =</span> <span class="st">&quot;medium&quot;</span>,</span>
+<span id="cb7-51"><a href="#cb7-51"></a>    <span class="at">table.width =</span> <span class="fu">pct</span>(<span class="dv">100</span>)     <span class="co"># &lt;-- full width of container</span></span>
+<span id="cb7-52"><a href="#cb7-52"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
+<div class="cell">
+<div class="cell-output-display">
+<div id="nljxslknwo" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#nljxslknwo table {
+font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+}
+#nljxslknwo thead, #nljxslknwo tbody, #nljxslknwo tfoot, #nljxslknwo tr, #nljxslknwo td, #nljxslknwo th {
+border-style: none;
+}
+#nljxslknwo p {
+margin: 0;
+padding: 0;
+}
+#nljxslknwo .gt_table {
+display: table;
+border-collapse: collapse;
+line-height: normal;
+margin-left: auto;
+margin-right: auto;
+color: #333333;
+font-size: small;
+font-weight: normal;
+font-style: normal;
+background-color: #FFFFFF;
+width: 100%;
+border-top-style: solid;
+border-top-width: 2px;
+border-top-color: #A8A8A8;
+border-right-style: none;
+border-right-width: 2px;
+border-right-color: #D3D3D3;
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #A8A8A8;
+border-left-style: none;
+border-left-width: 2px;
+border-left-color: #D3D3D3;
+}
+#nljxslknwo .gt_caption {
+padding-top: 4px;
+padding-bottom: 4px;
+}
+#nljxslknwo .gt_title {
+color: #333333;
+font-size: 125%;
+font-weight: initial;
+padding-top: 4px;
+padding-bottom: 4px;
+padding-left: 5px;
+padding-right: 5px;
+border-bottom-color: #FFFFFF;
+border-bottom-width: 0;
+}
+#nljxslknwo .gt_subtitle {
+color: #333333;
+font-size: 85%;
+font-weight: initial;
+padding-top: 3px;
+padding-bottom: 5px;
+padding-left: 5px;
+padding-right: 5px;
+border-top-color: #FFFFFF;
+border-top-width: 0;
+}
+#nljxslknwo .gt_heading {
+background-color: #FFFFFF;
+text-align: center;
+border-bottom-color: #FFFFFF;
+border-left-style: none;
+border-left-width: 1px;
+border-left-color: #D3D3D3;
+border-right-style: none;
+border-right-width: 1px;
+border-right-color: #D3D3D3;
+}
+#nljxslknwo .gt_bottom_border {
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+}
+#nljxslknwo .gt_col_headings {
+border-top-style: solid;
+border-top-width: 2px;
+border-top-color: #D3D3D3;
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+border-left-style: none;
+border-left-width: 1px;
+border-left-color: #D3D3D3;
+border-right-style: none;
+border-right-width: 1px;
+border-right-color: #D3D3D3;
+}
+#nljxslknwo .gt_col_heading {
+color: #333333;
+background-color: #FFFFFF;
+font-size: medium;
+font-weight: normal;
+text-transform: inherit;
+border-left-style: none;
+border-left-width: 1px;
+border-left-color: #D3D3D3;
+border-right-style: none;
+border-right-width: 1px;
+border-right-color: #D3D3D3;
+vertical-align: bottom;
+padding-top: 5px;
+padding-bottom: 6px;
+padding-left: 5px;
+padding-right: 5px;
+overflow-x: hidden;
+}
+#nljxslknwo .gt_column_spanner_outer {
+color: #333333;
+background-color: #FFFFFF;
+font-size: medium;
+font-weight: normal;
+text-transform: inherit;
+padding-top: 0;
+padding-bottom: 0;
+padding-left: 4px;
+padding-right: 4px;
+}
+#nljxslknwo .gt_column_spanner_outer:first-child {
+padding-left: 0;
+}
+#nljxslknwo .gt_column_spanner_outer:last-child {
+padding-right: 0;
+}
+#nljxslknwo .gt_column_spanner {
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+vertical-align: bottom;
+padding-top: 5px;
+padding-bottom: 5px;
+overflow-x: hidden;
+display: inline-block;
+width: 100%;
+}
+#nljxslknwo .gt_spanner_row {
+border-bottom-style: hidden;
+}
+#nljxslknwo .gt_group_heading {
+padding-top: 8px;
+padding-bottom: 8px;
+padding-left: 5px;
+padding-right: 5px;
+color: #333333;
+background-color: #FFFFFF;
+font-size: 100%;
+font-weight: initial;
+text-transform: inherit;
+border-top-style: solid;
+border-top-width: 2px;
+border-top-color: #D3D3D3;
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+border-left-style: none;
+border-left-width: 1px;
+border-left-color: #D3D3D3;
+border-right-style: none;
+border-right-width: 1px;
+border-right-color: #D3D3D3;
+vertical-align: middle;
+text-align: left;
+}
+#nljxslknwo .gt_empty_group_heading {
+padding: 0.5px;
+color: #333333;
+background-color: #FFFFFF;
+font-size: 100%;
+font-weight: initial;
+border-top-style: solid;
+border-top-width: 2px;
+border-top-color: #D3D3D3;
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+vertical-align: middle;
+}
+#nljxslknwo .gt_from_md > :first-child {
+margin-top: 0;
+}
+#nljxslknwo .gt_from_md > :last-child {
+margin-bottom: 0;
+}
+#nljxslknwo .gt_row {
+padding-top: 8px;
+padding-bottom: 8px;
+padding-left: 5px;
+padding-right: 5px;
+margin: 10px;
+border-top-style: solid;
+border-top-width: 1px;
+border-top-color: #D3D3D3;
+border-left-style: none;
+border-left-width: 1px;
+border-left-color: #D3D3D3;
+border-right-style: none;
+border-right-width: 1px;
+border-right-color: #D3D3D3;
+vertical-align: middle;
+overflow-x: hidden;
+}
+#nljxslknwo .gt_stub {
+color: #333333;
+background-color: #FFFFFF;
+font-size: 100%;
+font-weight: initial;
+text-transform: inherit;
+border-right-style: solid;
+border-right-width: 2px;
+border-right-color: #D3D3D3;
+padding-left: 5px;
+padding-right: 5px;
+}
+#nljxslknwo .gt_stub_row_group {
+color: #333333;
+background-color: #FFFFFF;
+font-size: 100%;
+font-weight: initial;
+text-transform: inherit;
+border-right-style: solid;
+border-right-width: 2px;
+border-right-color: #D3D3D3;
+padding-left: 5px;
+padding-right: 5px;
+vertical-align: top;
+}
+#nljxslknwo .gt_row_group_first td {
+border-top-width: 2px;
+}
+#nljxslknwo .gt_row_group_first th {
+border-top-width: 2px;
+}
+#nljxslknwo .gt_summary_row {
+color: #333333;
+background-color: #FFFFFF;
+text-transform: inherit;
+padding-top: 8px;
+padding-bottom: 8px;
+padding-left: 5px;
+padding-right: 5px;
+}
+#nljxslknwo .gt_first_summary_row {
+border-top-style: solid;
+border-top-color: #D3D3D3;
+}
+#nljxslknwo .gt_first_summary_row.thick {
+border-top-width: 2px;
+}
+#nljxslknwo .gt_last_summary_row {
+padding-top: 8px;
+padding-bottom: 8px;
+padding-left: 5px;
+padding-right: 5px;
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+}
+#nljxslknwo .gt_grand_summary_row {
+color: #333333;
+background-color: #FFFFFF;
+text-transform: inherit;
+padding-top: 8px;
+padding-bottom: 8px;
+padding-left: 5px;
+padding-right: 5px;
+}
+#nljxslknwo .gt_first_grand_summary_row {
+padding-top: 8px;
+padding-bottom: 8px;
+padding-left: 5px;
+padding-right: 5px;
+border-top-style: double;
+border-top-width: 6px;
+border-top-color: #D3D3D3;
+}
+#nljxslknwo .gt_last_grand_summary_row_top {
+padding-top: 8px;
+padding-bottom: 8px;
+padding-left: 5px;
+padding-right: 5px;
+border-bottom-style: double;
+border-bottom-width: 6px;
+border-bottom-color: #D3D3D3;
+}
+#nljxslknwo .gt_striped {
+background-color: rgba(128, 128, 128, 0.05);
+}
+#nljxslknwo .gt_table_body {
+border-top-style: solid;
+border-top-width: 2px;
+border-top-color: #D3D3D3;
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+}
+#nljxslknwo .gt_footnotes {
+color: #333333;
+background-color: #FFFFFF;
+border-bottom-style: none;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+border-left-style: none;
+border-left-width: 2px;
+border-left-color: #D3D3D3;
+border-right-style: none;
+border-right-width: 2px;
+border-right-color: #D3D3D3;
+}
+#nljxslknwo .gt_footnote {
+margin: 0px;
+font-size: 90%;
+padding-top: 4px;
+padding-bottom: 4px;
+padding-left: 5px;
+padding-right: 5px;
+}
+#nljxslknwo .gt_sourcenotes {
+color: #333333;
+background-color: #FFFFFF;
+border-bottom-style: none;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+border-left-style: none;
+border-left-width: 2px;
+border-left-color: #D3D3D3;
+border-right-style: none;
+border-right-width: 2px;
+border-right-color: #D3D3D3;
+}
+#nljxslknwo .gt_sourcenote {
+font-size: 90%;
+padding-top: 4px;
+padding-bottom: 4px;
+padding-left: 5px;
+padding-right: 5px;
+}
+#nljxslknwo .gt_left {
+text-align: left;
+}
+#nljxslknwo .gt_center {
+text-align: center;
+}
+#nljxslknwo .gt_right {
+text-align: right;
+font-variant-numeric: tabular-nums;
+}
+#nljxslknwo .gt_font_normal {
+font-weight: normal;
+}
+#nljxslknwo .gt_font_bold {
+font-weight: bold;
+}
+#nljxslknwo .gt_font_italic {
+font-style: italic;
+}
+#nljxslknwo .gt_super {
+font-size: 65%;
+}
+#nljxslknwo .gt_footnote_marks {
+font-size: 75%;
+vertical-align: 0.4em;
+position: initial;
+}
+#nljxslknwo .gt_asterisk {
+font-size: 100%;
+vertical-align: 0;
+}
+#nljxslknwo .gt_indent_1 {
+text-indent: 5px;
+}
+#nljxslknwo .gt_indent_2 {
+text-indent: 10px;
+}
+#nljxslknwo .gt_indent_3 {
+text-indent: 15px;
+}
+#nljxslknwo .gt_indent_4 {
+text-indent: 20px;
+}
+#nljxslknwo .gt_indent_5 {
+text-indent: 25px;
+}
+#nljxslknwo .katex-display {
+display: inline-flex !important;
+margin-bottom: 0.75em !important;
+}
+#nljxslknwo div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<th colspan="4" class="gt_heading gt_title gt_font_normal gt_bottom_border" style="text-align: center;">Table 2: Variable Summary <code>water_insecurity_2023_dat</code></th>
+</tr>
+<tr class="gt_col_headings even">
+<th id="variable" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="text-align: center; font-weight: bold;" scope="col">Variable Name</th>
+<th id="types" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" style="text-align: center; font-weight: bold;" scope="col">Type</th>
+<th id="missing_count" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="text-align: center; font-weight: bold;" scope="col">Missing Count</th>
+<th id="missing_percent" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" style="text-align: center; font-weight: bold;" scope="col">Missing (%)</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" style="text-align: center;" headers="variable">geoid</td>
+<td class="gt_row gt_left" style="text-align: center;" headers="types">character</td>
+<td class="gt_row gt_right" style="text-align: center;" headers="missing_count">0</td>
+<td class="gt_row gt_right" style="text-align: center;" headers="missing_percent">0.000 %</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" style="text-align: center;" headers="variable">name</td>
+<td class="gt_row gt_left" style="text-align: center;" headers="types">character</td>
+<td class="gt_row gt_right" style="text-align: center;" headers="missing_count">0</td>
+<td class="gt_row gt_right" style="text-align: center;" headers="missing_percent">0.000 %</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" style="text-align: center;" headers="variable">geometry</td>
+<td class="gt_row gt_left" style="text-align: center;" headers="types">character</td>
+<td class="gt_row gt_right" style="text-align: center;" headers="missing_count">0</td>
+<td class="gt_row gt_right" style="text-align: center;" headers="missing_percent">0.000 %</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" style="text-align: center;" headers="variable">year</td>
+<td class="gt_row gt_left" style="text-align: center;" headers="types">numeric</td>
+<td class="gt_row gt_right" style="text-align: center;" headers="missing_count">0</td>
+<td class="gt_row gt_right" style="text-align: center;" headers="missing_percent">0.000 %</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" style="text-align: center;" headers="variable">total_pop</td>
+<td class="gt_row gt_left" style="text-align: center;" headers="types">numeric</td>
+<td class="gt_row gt_right" style="text-align: center;" headers="missing_count">0</td>
+<td class="gt_row gt_right" style="text-align: center;" headers="missing_percent">0.000 %</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" style="text-align: center;" headers="variable">plumbing</td>
+<td class="gt_row gt_left" style="text-align: center;" headers="types">numeric</td>
+<td class="gt_row gt_right" style="text-align: center;" headers="missing_count">1</td>
+<td class="gt_row gt_right" style="text-align: center;" headers="missing_percent">0.117 %</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" style="text-align: center;" headers="variable">percent_lacking_plumbing</td>
+<td class="gt_row gt_left" style="text-align: center;" headers="types">numeric</td>
+<td class="gt_row gt_right" style="text-align: center;" headers="missing_count">1</td>
+<td class="gt_row gt_right" style="text-align: center;" headers="missing_percent">0.117 %</td>
+</tr>
+</tbody>
+</table>
+
 </div>
 </div>
-<pre><code>These two datasets contain data on the lack of complete indoor plumbing in U.S. counties for the years 2022 and 2023. The 2022 dataset includes information from 848 counties, while the 2023 dataset includes 854 counties. Each dataset contains seven variables: geoid, name, geometry, year, total_pop, plumbing, percent_lacking_plumbing. The columns plumbing and percent_lacking_plumbing have a small number of missing values—less than 0.3%—which does not significantly impact the overall analysis.</code></pre>
+</div>
+</section>
+<section id="synopsis-of-data-quality" class="level2">
+<h2 class="anchored" data-anchor-id="synopsis-of-data-quality">Synopsis of data quality:</h2>
+<p>These two datasets contain data on the lack of complete indoor plumbing in U.S. counties for the years 2022 and 2023. The 2022 dataset includes information from 848 counties, while the 2023 dataset includes 854 counties. Each dataset contains seven variables: geoid, name, geometry, year, total_pop, plumbing, percent_lacking_plumbing. The columns plumbing and percent_lacking_plumbing have a small number of missing values—less than 0.3%—which does not significantly impact the overall analysis.</p>
 </section>
 <section id="why-we-chose-this-data-set" class="level2">
 <h2 class="anchored" data-anchor-id="why-we-chose-this-data-set">Why we chose this data-set:</h2>
@@ -6146,179 +6661,245 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class>
-<div class="sourceCode" id="cb10" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1"></a><span class="co">---</span></span>
-<span id="cb10-2"><a href="#cb10-2"></a><span class="an">title:</span><span class="co"> &quot;Plumbing the Data:\nMapping U.S. Water Insecurity&quot;</span></span>
-<span id="cb10-3"><a href="#cb10-3"></a><span class="an">subtitle:</span><span class="co"> &quot;Final project proposal - INFO 526&quot;</span></span>
-<span id="cb10-4"><a href="#cb10-4"></a><span class="an">author:</span><span class="co"> </span></span>
-<span id="cb10-5"><a href="#cb10-5"></a><span class="co">  - name: &quot;Team: Yashi Mi &amp; Nathan Herling&quot;</span></span>
-<span id="cb10-6"><a href="#cb10-6"></a><span class="co">    affiliations:</span></span>
-<span id="cb10-7"><a href="#cb10-7"></a><span class="co">      - name: &quot;School of Information, University of Arizona&quot;</span></span>
-<span id="cb10-8"><a href="#cb10-8"></a><span class="an">description:</span><span class="co"> &quot;**Project description**&lt;br&gt;This project explores county-level water insecurity in the U.S. for 2022 and 2023, focusing on access to complete indoor plumbing. Using data from the American Community Survey (ACS), we analyze geographic and demographic patterns across over 850 counties each year. The goal is to identify regional disparities and year-over-year trends to better understand the social factors linked to plumbing access.&quot;</span></span>
-<span id="cb10-9"><a href="#cb10-9"></a><span class="an">format:</span></span>
-<span id="cb10-10"><a href="#cb10-10"></a><span class="co">  html:</span></span>
-<span id="cb10-11"><a href="#cb10-11"></a><span class="co">    code-tools: true</span></span>
-<span id="cb10-12"><a href="#cb10-12"></a><span class="co">    code-overflow: wrap</span></span>
-<span id="cb10-13"><a href="#cb10-13"></a><span class="co">    code-line-numbers: true</span></span>
-<span id="cb10-14"><a href="#cb10-14"></a><span class="co">    embed-resources: true</span></span>
-<span id="cb10-15"><a href="#cb10-15"></a><span class="an">editor:</span><span class="co"> visual</span></span>
-<span id="cb10-16"><a href="#cb10-16"></a><span class="an">code-annotations:</span><span class="co"> hover</span></span>
-<span id="cb10-17"><a href="#cb10-17"></a><span class="an">execute:</span></span>
-<span id="cb10-18"><a href="#cb10-18"></a><span class="co">  warning: false</span></span>
-<span id="cb10-19"><a href="#cb10-19"></a><span class="co">---</span></span>
-<span id="cb10-20"><a href="#cb10-20"></a></span>
-<span id="cb10-21"><a href="#cb10-21"></a></span>
-<span id="cb10-22"><a href="#cb10-22"></a><span class="fu">## Packages Setup</span></span>
-<span id="cb10-23"><a href="#cb10-23"></a>&lt;details&gt;</span>
-<span id="cb10-24"><a href="#cb10-24"></a>  &lt;summary&gt;Installed Packages&lt;/summary&gt;</span>
-<span id="cb10-27"><a href="#cb10-27"></a><span class="in">```{r}</span></span>
-<span id="cb10-28"><a href="#cb10-28"></a><span class="co">#| label: load-pkgs</span></span>
-<span id="cb10-29"><a href="#cb10-29"></a><span class="co">#| message: false</span></span>
-<span id="cb10-30"><a href="#cb10-30"></a></span>
-<span id="cb10-31"><a href="#cb10-31"></a><span class="co"># - loading package manager</span></span>
-<span id="cb10-32"><a href="#cb10-32"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(pacman))</span>
-<span id="cb10-33"><a href="#cb10-33"></a>  <span class="fu">install.packages</span>(pacman)</span>
-<span id="cb10-34"><a href="#cb10-34"></a></span>
-<span id="cb10-35"><a href="#cb10-35"></a><span class="co"># - loading required packages</span></span>
-<span id="cb10-36"><a href="#cb10-36"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse,</span>
-<span id="cb10-37"><a href="#cb10-37"></a>               here,</span>
-<span id="cb10-38"><a href="#cb10-38"></a>               tibble,</span>
-<span id="cb10-39"><a href="#cb10-39"></a>               gt)</span>
-<span id="cb10-40"><a href="#cb10-40"></a><span class="in">```</span></span>
-<span id="cb10-41"><a href="#cb10-41"></a>&lt;/details&gt;</span>
-<span id="cb10-42"><a href="#cb10-42"></a></span>
-<span id="cb10-43"><a href="#cb10-43"></a><span class="fu">## Dataset</span></span>
-<span id="cb10-44"><a href="#cb10-44"></a></span>
-<span id="cb10-47"><a href="#cb10-47"></a><span class="in">```{r}</span></span>
-<span id="cb10-48"><a href="#cb10-48"></a><span class="co">#| label: Water Insecurity</span></span>
-<span id="cb10-49"><a href="#cb10-49"></a><span class="co">#| message: false</span></span>
-<span id="cb10-50"><a href="#cb10-50"></a><span class="co"># Load water insecurity data from the TidyTuesday project (2025-01-28)</span></span>
-<span id="cb10-51"><a href="#cb10-51"></a><span class="co"># This dataset explores social vulnerability and access to complete indoor</span></span>
-<span id="cb10-52"><a href="#cb10-52"></a><span class="co"># plumbing across U.S. counties,</span></span>
-<span id="cb10-53"><a href="#cb10-53"></a><span class="co"># curated by Niha Pereira and featured in the blog post:</span></span>
-<span id="cb10-54"><a href="#cb10-54"></a><span class="co"># &quot;Mapping water insecurity in R with tidycensus&quot;</span></span>
-<span id="cb10-55"><a href="#cb10-55"></a><span class="co"># Original data sources include the U.S. Census Bureau (ACS) and the USGS Vizlab’s</span></span>
-<span id="cb10-56"><a href="#cb10-56"></a><span class="co"># “Unequal Access to Water” visualization.</span></span>
-<span id="cb10-57"><a href="#cb10-57"></a><span class="co"># Repo: </span></span>
-<span id="cb10-58"><a href="#cb10-58"></a><span class="co"># https://github.com/rfordatascience/tidytuesday/tree/main/data/2025/2025-01-28</span></span>
-<span id="cb10-59"><a href="#cb10-59"></a>water_insecurity_2022 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">&quot;water_insecurity&quot;</span>,</span>
-<span id="cb10-60"><a href="#cb10-60"></a>                                       <span class="st">&quot;water_insecurity_2022.csv&quot;</span>))</span>
-<span id="cb10-61"><a href="#cb10-61"></a>water_insecurity_2023 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">&quot;water_insecurity&quot;</span>,</span>
-<span id="cb10-62"><a href="#cb10-62"></a>                                       <span class="st">&quot;water_insecurity_2023.csv&quot;</span>))</span>
-<span id="cb10-63"><a href="#cb10-63"></a><span class="fu">glimpse</span>(water_insecurity_2022)</span>
-<span id="cb10-64"><a href="#cb10-64"></a><span class="fu">glimpse</span>(water_insecurity_2023)</span>
-<span id="cb10-65"><a href="#cb10-65"></a></span>
-<span id="cb10-66"><a href="#cb10-66"></a><span class="in">```</span></span>
-<span id="cb10-67"><a href="#cb10-67"></a></span>
-<span id="cb10-68"><a href="#cb10-68"></a><span class="fu">## About the ACS Plumbing Data</span></span>
-<span id="cb10-69"><a href="#cb10-69"></a>For the final project, we selected the U.S. Water Insecurity dataset from TidyTuesday (2025-01-28). The 2022 and 2023 datasets were collected by the U.S. Census Bureau&#39;s American Community Survey (ACS). Each dataset provides comprehensive county-level information, including geographic boundaries, population size, the number of households lacking plumbing, and the percentage of the population lacking plumbing facilities.</span>
-<span id="cb10-70"><a href="#cb10-70"></a></span>
-<span id="cb10-71"><a href="#cb10-71"></a>The two datastes includes the following variables:</span>
-<span id="cb10-72"><a href="#cb10-72"></a></span>
-<span id="cb10-73"><a href="#cb10-73"></a><span class="ss">-   </span>&lt;code&gt;geoid&lt;/code&gt;: The U.S. Census Bureau ACS county id.</span>
-<span id="cb10-74"><a href="#cb10-74"></a></span>
-<span id="cb10-75"><a href="#cb10-75"></a><span class="ss">-   </span>&lt;code&gt;name&lt;/code&gt;: The U.S. Census Bureau ACS county name.</span>
-<span id="cb10-76"><a href="#cb10-76"></a></span>
-<span id="cb10-77"><a href="#cb10-77"></a><span class="ss">-   </span>&lt;code&gt;year&lt;/code&gt;: The year of U.S. Census Bureau ACS sample.</span>
-<span id="cb10-78"><a href="#cb10-78"></a></span>
-<span id="cb10-79"><a href="#cb10-79"></a><span class="ss">-   </span>&lt;code&gt;geometry&lt;/code&gt;: The county geographic boundaries.</span>
-<span id="cb10-80"><a href="#cb10-80"></a></span>
-<span id="cb10-81"><a href="#cb10-81"></a><span class="ss">-   </span>&lt;code&gt;total_pop&lt;/code&gt;: The total population.</span>
-<span id="cb10-82"><a href="#cb10-82"></a></span>
-<span id="cb10-83"><a href="#cb10-83"></a><span class="ss">-   </span>&lt;code&gt;plumbing&lt;/code&gt;: The total owner occupied households lacking plumbing facilities.</span>
-<span id="cb10-84"><a href="#cb10-84"></a></span>
-<span id="cb10-85"><a href="#cb10-85"></a><span class="ss">-   </span>&lt;code&gt;percent_lacking_plumbing&lt;/code&gt;: The percent of population lacking plumbing facilities.</span>
-<span id="cb10-86"><a href="#cb10-86"></a></span>
-<span id="cb10-87"><a href="#cb10-87"></a>    ## water_insecurity_2022_data</span>
-<span id="cb10-88"><a href="#cb10-88"></a></span>
-<span id="cb10-89"><a href="#cb10-89"></a>&lt;details&gt;</span>
-<span id="cb10-90"><a href="#cb10-90"></a>  &lt;summary&gt;Code: Water Insecurity 2022 data&lt;/summary&gt;</span>
-<span id="cb10-91"><a href="#cb10-91"></a><span class="in">```{r, echo=TRUE, results=&#39;hide&#39;}</span></span>
-<span id="cb10-92"><a href="#cb10-92"></a><span class="in"># Load required packages</span></span>
-<span id="cb10-93"><a href="#cb10-93"></a></span>
-<span id="cb10-94"><a href="#cb10-94"></a><span class="in"># Create summary table</span></span>
-<span id="cb10-95"><a href="#cb10-95"></a><span class="in">table1 &lt;- tibble(</span></span>
-<span id="cb10-96"><a href="#cb10-96"></a><span class="in">  variable = c(&quot;geoid&quot;, &quot;name&quot;, &quot;geometry&quot;,</span></span>
-<span id="cb10-97"><a href="#cb10-97"></a><span class="in">               &quot;year&quot;, &quot;total_pop&quot;, &quot;plumbing&quot;,</span></span>
-<span id="cb10-98"><a href="#cb10-98"></a><span class="in">               &quot;percent_lacking_plumbing&quot;),</span></span>
-<span id="cb10-99"><a href="#cb10-99"></a><span class="in">  types = c(&quot;character&quot;, &quot;character&quot;, &quot;character&quot;,</span></span>
-<span id="cb10-100"><a href="#cb10-100"></a><span class="in">            &quot;numeric&quot;, &quot;numeric&quot;, &quot;numeric&quot;, &quot;numeric&quot;),</span></span>
-<span id="cb10-101"><a href="#cb10-101"></a><span class="in">  missing_count = c(0, 0, 0, 0, 0, 2, 2),</span></span>
-<span id="cb10-102"><a href="#cb10-102"></a><span class="in">  missing_percent = c(0, 0, 0, 0, 0, 0.23585, 0.23585)</span></span>
-<span id="cb10-103"><a href="#cb10-103"></a><span class="in">)</span></span>
-<span id="cb10-104"><a href="#cb10-104"></a></span>
-<span id="cb10-105"><a href="#cb10-105"></a><span class="in">gt_table &lt;- table1 |&gt;</span></span>
-<span id="cb10-106"><a href="#cb10-106"></a><span class="in">  gt() |&gt;</span></span>
-<span id="cb10-107"><a href="#cb10-107"></a><span class="in">  tab_header(</span></span>
-<span id="cb10-108"><a href="#cb10-108"></a><span class="in">    title = &quot;Table 1: Variable Summary for Plumbing Dataset&quot;</span></span>
-<span id="cb10-109"><a href="#cb10-109"></a><span class="in">  ) |&gt;</span></span>
-<span id="cb10-110"><a href="#cb10-110"></a><span class="in">  fmt(</span></span>
-<span id="cb10-111"><a href="#cb10-111"></a><span class="in">    columns = missing_percent,</span></span>
-<span id="cb10-112"><a href="#cb10-112"></a><span class="in">    fns = function(x) paste0(formatC(x, format = &quot;f&quot;, digits = 3), &quot; %&quot;)</span></span>
-<span id="cb10-113"><a href="#cb10-113"></a><span class="in">  ) |&gt;</span></span>
-<span id="cb10-114"><a href="#cb10-114"></a><span class="in">  cols_label(</span></span>
-<span id="cb10-115"><a href="#cb10-115"></a><span class="in">    variable = &quot;Variable Name&quot;,</span></span>
-<span id="cb10-116"><a href="#cb10-116"></a><span class="in">    types = &quot;Type&quot;,</span></span>
-<span id="cb10-117"><a href="#cb10-117"></a><span class="in">    missing_count = &quot;Missing Count&quot;,</span></span>
-<span id="cb10-118"><a href="#cb10-118"></a><span class="in">    missing_percent = &quot;Missing (%)&quot;</span></span>
-<span id="cb10-119"><a href="#cb10-119"></a><span class="in">  ) |&gt;</span></span>
-<span id="cb10-120"><a href="#cb10-120"></a><span class="in">  tab_style(</span></span>
-<span id="cb10-121"><a href="#cb10-121"></a><span class="in">    style = cell_text(weight = &quot;bold&quot;, align = &quot;center&quot;),</span></span>
-<span id="cb10-122"><a href="#cb10-122"></a><span class="in">    locations = cells_column_labels(everything())</span></span>
-<span id="cb10-123"><a href="#cb10-123"></a><span class="in">  ) |&gt;</span></span>
-<span id="cb10-124"><a href="#cb10-124"></a><span class="in">  tab_style(style = cell_text(align = &quot;center&quot;),</span></span>
-<span id="cb10-125"><a href="#cb10-125"></a><span class="in">            locations = cells_body(everything())) |&gt; </span></span>
-<span id="cb10-126"><a href="#cb10-126"></a><span class="in">  tab_options(</span></span>
-<span id="cb10-127"><a href="#cb10-127"></a><span class="in">    table.font.size = &quot;small&quot;,</span></span>
-<span id="cb10-128"><a href="#cb10-128"></a><span class="in">    column_labels.font.size = &quot;medium&quot;,</span></span>
-<span id="cb10-129"><a href="#cb10-129"></a><span class="in">    table.width = pct(100)     # &lt;-- full width of container</span></span>
-<span id="cb10-130"><a href="#cb10-130"></a><span class="in">  )</span></span>
-<span id="cb10-131"><a href="#cb10-131"></a><span class="in">```</span></span>
-<span id="cb10-132"><a href="#cb10-132"></a>&lt;/details&gt;</span>
-<span id="cb10-133"><a href="#cb10-133"></a></span>
-<span id="cb10-134"><a href="#cb10-134"></a><span class="in">```{r, echo=FALSE}</span></span>
-<span id="cb10-135"><a href="#cb10-135"></a><span class="in"># Now render the table by printing the gt object</span></span>
-<span id="cb10-136"><a href="#cb10-136"></a><span class="in">gt_table</span></span>
-<span id="cb10-137"><a href="#cb10-137"></a><span class="in">```</span></span>
-<span id="cb10-138"><a href="#cb10-138"></a></span>
-<span id="cb10-139"><a href="#cb10-139"></a><span class="fu">## water_insecurity_2023_data</span></span>
-<span id="cb10-140"><a href="#cb10-140"></a></span>
-<span id="cb10-143"><a href="#cb10-143"></a><span class="in">```{r}</span></span>
-<span id="cb10-144"><a href="#cb10-144"></a>    table2 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb10-145"><a href="#cb10-145"></a>      <span class="at">variable =</span> <span class="fu">c</span>(<span class="st">&quot;geoid&quot;</span>, <span class="st">&quot;name&quot;</span>,<span class="st">&quot;geometry&quot;</span>,</span>
-<span id="cb10-146"><a href="#cb10-146"></a>                   <span class="st">&quot;year&quot;</span>,<span class="st">&quot;total_pop&quot;</span>,<span class="st">&quot;plumbing&quot;</span>,</span>
-<span id="cb10-147"><a href="#cb10-147"></a>                   <span class="st">&quot;percent_lacking_plumbing&quot;</span>),</span>
-<span id="cb10-148"><a href="#cb10-148"></a>      <span class="at">types =</span> <span class="fu">c</span>(<span class="st">&quot;character&quot;</span>, <span class="st">&quot;character&quot;</span>,<span class="st">&quot;character&quot;</span>, </span>
-<span id="cb10-149"><a href="#cb10-149"></a>                <span class="st">&quot;numeric&quot;</span>,<span class="st">&quot;numeric&quot;</span>,<span class="st">&quot;numeric&quot;</span>,<span class="st">&quot;numeric&quot;</span>),</span>
-<span id="cb10-150"><a href="#cb10-150"></a>      <span class="at">missing_count =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>),</span>
-<span id="cb10-151"><a href="#cb10-151"></a>      <span class="at">missing_percent =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="fl">0.1171</span>,<span class="fl">0.1171</span>))</span>
-<span id="cb10-152"><a href="#cb10-152"></a>    table2</span>
-<span id="cb10-153"><a href="#cb10-153"></a><span class="in">```</span></span>
-<span id="cb10-154"><a href="#cb10-154"></a></span>
-<span id="cb10-155"><a href="#cb10-155"></a><span class="in">    These two datasets contain data on the lack of complete indoor plumbing in U.S. counties for the years 2022 and 2023. The 2022 dataset includes information from 848 counties, while the 2023 dataset includes 854 counties. Each dataset contains seven variables: geoid, name, geometry, year, total_pop, plumbing, percent_lacking_plumbing. The columns plumbing and percent_lacking_plumbing have a small number of missing values—less than 0.3%—which does not significantly impact the overall analysis.</span></span>
-<span id="cb10-156"><a href="#cb10-156"></a></span>
-<span id="cb10-157"><a href="#cb10-157"></a><span class="fu">## Why we chose this data-set:</span></span>
-<span id="cb10-158"><a href="#cb10-158"></a></span>
-<span id="cb10-159"><a href="#cb10-159"></a>We chose this dataset because water insecurity is a critical public health issue that may be influenced by various social vulnerability indicators. The data, sourced from the American Community Survey (ACS), provides county-level information on indoor plumbing insecurity for both 2022 and 2023. Since it covers multiple counties and spans two years, it is well-suited for analyzing year-over-year trends and regional disparities across the U.S. Additionally, the dataset is clean, complete, well-documented, and ideal for collaborative analysis and visualization.</span>
-<span id="cb10-160"><a href="#cb10-160"></a></span>
-<span id="cb10-161"><a href="#cb10-161"></a><span class="fu">## Question:</span></span>
-<span id="cb10-162"><a href="#cb10-162"></a></span>
-<span id="cb10-163"><a href="#cb10-163"></a>The two questions to be answered are:</span>
-<span id="cb10-164"><a href="#cb10-164"></a></span>
-<span id="cb10-165"><a href="#cb10-165"></a>Question 1: Top counties had the highest plumbing insecurity in 2022 and 2023.</span>
-<span id="cb10-166"><a href="#cb10-166"></a></span>
-<span id="cb10-167"><a href="#cb10-167"></a>Question 2: How did plumbing insecurity change between 2022 and 2023 for each county?</span>
-<span id="cb10-168"><a href="#cb10-168"></a></span>
-<span id="cb10-169"><a href="#cb10-169"></a><span class="fu">## Analysis plan</span></span>
-<span id="cb10-170"><a href="#cb10-170"></a></span>
-<span id="cb10-171"><a href="#cb10-171"></a>The following are the approaches we will be using for each question.</span>
-<span id="cb10-172"><a href="#cb10-172"></a></span>
-<span id="cb10-173"><a href="#cb10-173"></a><span class="fu">## **Approach for question 1**</span></span>
-<span id="cb10-174"><a href="#cb10-174"></a></span>
-<span id="cb10-175"><a href="#cb10-175"></a><span class="ss">-   </span>We want to visualize which U.S. counties experienced the highest level of plumbing insecurity in 2022 and 2023. To represent the available data best, we will be creating bar graphs showing the top 10 counties with the highest percentages of households lacking complete indoor plumbing for each year. The comparison of the plot will be done for each individual year to highlight the most affected regions in the U.S.</span>
-<span id="cb10-176"><a href="#cb10-176"></a></span>
-<span id="cb10-177"><a href="#cb10-177"></a>    We will clean the data using dplyr package by filtering and selecting the required variables for the analysis, including name, percent_lacking_plumbing, and year. We will sort the counties in descending order of percent_lacking_plumbing for each year. And the Top 10 counties for both 2022 and 2023 will be selected and combined into a single dataset for the visualization.</span>
-<span id="cb10-178"><a href="#cb10-178"></a></span>
-<span id="cb10-179"><a href="#cb10-179"></a>    To visualize the results, we will use geom_col() from ggplot2 package to create bar graph, showing comparison between 2022 and 2023 using facet separation. These plots will allow us to address our first research question by identifying the top 10 counties with plumbing insecurity in the U.S and comparing the top-affected regions between 2022 and 2023.</span>
+<div class="sourceCode" id="cb8" data-shortcodes="false"><pre class="sourceCode numberSource markdown number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1"></a><span class="co">---</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="an">title:</span><span class="co"> &quot;Plumbing the Data:\nMapping U.S. Water Insecurity&quot;</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="an">subtitle:</span><span class="co"> &quot;Final project proposal - INFO 526&quot;</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="an">author:</span><span class="co"> </span></span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="co">  - name: &quot;Team: Yashi Mi &amp; Nathan Herling&quot;</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a><span class="co">    affiliations:</span></span>
+<span id="cb8-7"><a href="#cb8-7"></a><span class="co">      - name: &quot;School of Information, University of Arizona&quot;</span></span>
+<span id="cb8-8"><a href="#cb8-8"></a><span class="an">description:</span><span class="co"> &quot;**Project description**&lt;br&gt;This project explores county-level water insecurity in the U.S. for 2022 and 2023, focusing on access to complete indoor plumbing. Using data from the American Community Survey (ACS), we analyze geographic and demographic patterns across over 850 counties each year. The goal is to identify regional disparities and year-over-year trends to better understand the social factors linked to plumbing access.&quot;</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a><span class="an">format:</span></span>
+<span id="cb8-10"><a href="#cb8-10"></a><span class="co">  html:</span></span>
+<span id="cb8-11"><a href="#cb8-11"></a><span class="co">    code-tools: true</span></span>
+<span id="cb8-12"><a href="#cb8-12"></a><span class="co">    code-overflow: wrap</span></span>
+<span id="cb8-13"><a href="#cb8-13"></a><span class="co">    code-line-numbers: true</span></span>
+<span id="cb8-14"><a href="#cb8-14"></a><span class="co">    embed-resources: true</span></span>
+<span id="cb8-15"><a href="#cb8-15"></a><span class="an">editor:</span><span class="co"> visual</span></span>
+<span id="cb8-16"><a href="#cb8-16"></a><span class="an">code-annotations:</span><span class="co"> hover</span></span>
+<span id="cb8-17"><a href="#cb8-17"></a><span class="an">execute:</span></span>
+<span id="cb8-18"><a href="#cb8-18"></a><span class="co">  warning: false</span></span>
+<span id="cb8-19"><a href="#cb8-19"></a><span class="co">---</span></span>
+<span id="cb8-20"><a href="#cb8-20"></a></span>
+<span id="cb8-21"><a href="#cb8-21"></a></span>
+<span id="cb8-22"><a href="#cb8-22"></a><span class="fu">## Packages Setup</span></span>
+<span id="cb8-23"><a href="#cb8-23"></a>&lt;details&gt;</span>
+<span id="cb8-24"><a href="#cb8-24"></a>  &lt;summary&gt;Installed Packages&lt;/summary&gt;</span>
+<span id="cb8-27"><a href="#cb8-27"></a><span class="in">```{r}</span></span>
+<span id="cb8-28"><a href="#cb8-28"></a><span class="co">#| label: load-pkgs</span></span>
+<span id="cb8-29"><a href="#cb8-29"></a><span class="co">#| message: false</span></span>
+<span id="cb8-30"><a href="#cb8-30"></a></span>
+<span id="cb8-31"><a href="#cb8-31"></a><span class="co"># - loading package manager</span></span>
+<span id="cb8-32"><a href="#cb8-32"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(pacman))</span>
+<span id="cb8-33"><a href="#cb8-33"></a>  <span class="fu">install.packages</span>(pacman)</span>
+<span id="cb8-34"><a href="#cb8-34"></a></span>
+<span id="cb8-35"><a href="#cb8-35"></a><span class="co"># - loading required packages</span></span>
+<span id="cb8-36"><a href="#cb8-36"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse,</span>
+<span id="cb8-37"><a href="#cb8-37"></a>               here,</span>
+<span id="cb8-38"><a href="#cb8-38"></a>               tibble,</span>
+<span id="cb8-39"><a href="#cb8-39"></a>               gt)</span>
+<span id="cb8-40"><a href="#cb8-40"></a><span class="in">```</span></span>
+<span id="cb8-41"><a href="#cb8-41"></a>&lt;/details&gt;</span>
+<span id="cb8-42"><a href="#cb8-42"></a></span>
+<span id="cb8-43"><a href="#cb8-43"></a><span class="fu">## Dataset</span></span>
+<span id="cb8-44"><a href="#cb8-44"></a></span>
+<span id="cb8-47"><a href="#cb8-47"></a><span class="in">```{r}</span></span>
+<span id="cb8-48"><a href="#cb8-48"></a><span class="co">#| label: Water Insecurity</span></span>
+<span id="cb8-49"><a href="#cb8-49"></a><span class="co">#| message: false</span></span>
+<span id="cb8-50"><a href="#cb8-50"></a><span class="co"># Load water insecurity data from the TidyTuesday project (2025-01-28)</span></span>
+<span id="cb8-51"><a href="#cb8-51"></a><span class="co"># This dataset explores social vulnerability and access to complete indoor</span></span>
+<span id="cb8-52"><a href="#cb8-52"></a><span class="co"># plumbing across U.S. counties,</span></span>
+<span id="cb8-53"><a href="#cb8-53"></a><span class="co"># curated by Niha Pereira and featured in the blog post:</span></span>
+<span id="cb8-54"><a href="#cb8-54"></a><span class="co"># &quot;Mapping water insecurity in R with tidycensus&quot;</span></span>
+<span id="cb8-55"><a href="#cb8-55"></a><span class="co"># Original data sources include the U.S. Census Bureau (ACS) and the USGS Vizlab’s</span></span>
+<span id="cb8-56"><a href="#cb8-56"></a><span class="co"># “Unequal Access to Water” visualization.</span></span>
+<span id="cb8-57"><a href="#cb8-57"></a><span class="co"># Repo: </span></span>
+<span id="cb8-58"><a href="#cb8-58"></a><span class="co"># https://github.com/rfordatascience/tidytuesday/tree/main/data/2025/2025-01-28</span></span>
+<span id="cb8-59"><a href="#cb8-59"></a>water_insecurity_2022 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">&quot;water_insecurity&quot;</span>,</span>
+<span id="cb8-60"><a href="#cb8-60"></a>                                       <span class="st">&quot;water_insecurity_2022.csv&quot;</span>))</span>
+<span id="cb8-61"><a href="#cb8-61"></a>water_insecurity_2023 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">&quot;water_insecurity&quot;</span>,</span>
+<span id="cb8-62"><a href="#cb8-62"></a>                                       <span class="st">&quot;water_insecurity_2023.csv&quot;</span>))</span>
+<span id="cb8-63"><a href="#cb8-63"></a><span class="fu">glimpse</span>(water_insecurity_2022)</span>
+<span id="cb8-64"><a href="#cb8-64"></a><span class="fu">glimpse</span>(water_insecurity_2023)</span>
+<span id="cb8-65"><a href="#cb8-65"></a></span>
+<span id="cb8-66"><a href="#cb8-66"></a><span class="in">```</span></span>
+<span id="cb8-67"><a href="#cb8-67"></a></span>
+<span id="cb8-68"><a href="#cb8-68"></a><span class="fu">## About the ACS Plumbing Data</span></span>
+<span id="cb8-69"><a href="#cb8-69"></a>For the final project, we selected the U.S. Water Insecurity dataset from TidyTuesday (2025-01-28). The 2022 and 2023 datasets were collected by the U.S. Census Bureau&#39;s American Community Survey (ACS). Each dataset provides comprehensive county-level information, including geographic boundaries, population size, the number of households lacking plumbing, and the percentage of the population lacking plumbing facilities.</span>
+<span id="cb8-70"><a href="#cb8-70"></a></span>
+<span id="cb8-71"><a href="#cb8-71"></a>The two datastes includes the following variables:</span>
+<span id="cb8-72"><a href="#cb8-72"></a></span>
+<span id="cb8-73"><a href="#cb8-73"></a><span class="ss">-   </span><span class="in">`geoid`</span>: The U.S. Census Bureau ACS county id.</span>
+<span id="cb8-74"><a href="#cb8-74"></a></span>
+<span id="cb8-75"><a href="#cb8-75"></a><span class="ss">-   </span><span class="in">`name`</span>: The U.S. Census Bureau ACS county name.</span>
+<span id="cb8-76"><a href="#cb8-76"></a></span>
+<span id="cb8-77"><a href="#cb8-77"></a><span class="ss">-   </span><span class="in">`year`</span>: The year of U.S. Census Bureau ACS sample.</span>
+<span id="cb8-78"><a href="#cb8-78"></a></span>
+<span id="cb8-79"><a href="#cb8-79"></a><span class="ss">-   </span><span class="in">`geometry`</span>: The county geographic boundaries.</span>
+<span id="cb8-80"><a href="#cb8-80"></a></span>
+<span id="cb8-81"><a href="#cb8-81"></a><span class="ss">-   </span><span class="in">`total_pop`</span>: The total population.</span>
+<span id="cb8-82"><a href="#cb8-82"></a></span>
+<span id="cb8-83"><a href="#cb8-83"></a><span class="ss">-   </span><span class="in">`plumbing`</span>: The total owner occupied households lacking plumbing facilities.</span>
+<span id="cb8-84"><a href="#cb8-84"></a></span>
+<span id="cb8-85"><a href="#cb8-85"></a><span class="ss">-   </span><span class="in">`percent_lacking_plumbing`</span>: The percent of population lacking plumbing facilities.</span>
+<span id="cb8-86"><a href="#cb8-86"></a></span>
+<span id="cb8-87"><a href="#cb8-87"></a><span class="fu">## water_insecurity_2022_data</span></span>
+<span id="cb8-88"><a href="#cb8-88"></a></span>
+<span id="cb8-89"><a href="#cb8-89"></a>&lt;details&gt;</span>
+<span id="cb8-90"><a href="#cb8-90"></a>  &lt;summary&gt;Code: Water Insecurity 2022 data analysis&lt;/summary&gt;</span>
+<span id="cb8-91"><a href="#cb8-91"></a><span class="in">```{r, echo=TRUE, results=&#39;hide&#39;}</span></span>
+<span id="cb8-92"><a href="#cb8-92"></a></span>
+<span id="cb8-93"><a href="#cb8-93"></a><span class="in"># Create summary table</span></span>
+<span id="cb8-94"><a href="#cb8-94"></a><span class="in">table1 &lt;- tibble(</span></span>
+<span id="cb8-95"><a href="#cb8-95"></a><span class="in">  variable = c(</span></span>
+<span id="cb8-96"><a href="#cb8-96"></a><span class="in">    &quot;geoid&quot;,</span></span>
+<span id="cb8-97"><a href="#cb8-97"></a><span class="in">    &quot;name&quot;,</span></span>
+<span id="cb8-98"><a href="#cb8-98"></a><span class="in">    &quot;geometry&quot;,</span></span>
+<span id="cb8-99"><a href="#cb8-99"></a><span class="in">    &quot;year&quot;,</span></span>
+<span id="cb8-100"><a href="#cb8-100"></a><span class="in">    &quot;total_pop&quot;,</span></span>
+<span id="cb8-101"><a href="#cb8-101"></a><span class="in">    &quot;plumbing&quot;,</span></span>
+<span id="cb8-102"><a href="#cb8-102"></a><span class="in">    &quot;percent_lacking_plumbing&quot;</span></span>
+<span id="cb8-103"><a href="#cb8-103"></a><span class="in">  ),</span></span>
+<span id="cb8-104"><a href="#cb8-104"></a><span class="in">  types = c(</span></span>
+<span id="cb8-105"><a href="#cb8-105"></a><span class="in">    &quot;character&quot;,</span></span>
+<span id="cb8-106"><a href="#cb8-106"></a><span class="in">    &quot;character&quot;,</span></span>
+<span id="cb8-107"><a href="#cb8-107"></a><span class="in">    &quot;character&quot;,</span></span>
+<span id="cb8-108"><a href="#cb8-108"></a><span class="in">    &quot;numeric&quot;,</span></span>
+<span id="cb8-109"><a href="#cb8-109"></a><span class="in">    &quot;numeric&quot;,</span></span>
+<span id="cb8-110"><a href="#cb8-110"></a><span class="in">    &quot;numeric&quot;,</span></span>
+<span id="cb8-111"><a href="#cb8-111"></a><span class="in">    &quot;numeric&quot;</span></span>
+<span id="cb8-112"><a href="#cb8-112"></a><span class="in">  ),</span></span>
+<span id="cb8-113"><a href="#cb8-113"></a><span class="in">  missing_count = c(0, 0, 0, 0, 0, 2, 2),</span></span>
+<span id="cb8-114"><a href="#cb8-114"></a><span class="in">  missing_percent = c(0, 0, 0, 0, 0, 0.23585, 0.23585)</span></span>
+<span id="cb8-115"><a href="#cb8-115"></a><span class="in">)</span></span>
+<span id="cb8-116"><a href="#cb8-116"></a><span class="in"># - format the table with the gt library</span></span>
+<span id="cb8-117"><a href="#cb8-117"></a><span class="in">gt_table_1 &lt;- table1 |&gt;</span></span>
+<span id="cb8-118"><a href="#cb8-118"></a><span class="in">  gt() |&gt;</span></span>
+<span id="cb8-119"><a href="#cb8-119"></a><span class="in">  tab_header(</span></span>
+<span id="cb8-120"><a href="#cb8-120"></a><span class="in">    #&lt;--- format as markdown</span></span>
+<span id="cb8-121"><a href="#cb8-121"></a><span class="in">    title = md(&quot;Table 1: Variable Summary `water_insecurity_2022_dat`&quot;) #&lt;--- format as markdown</span></span>
+<span id="cb8-122"><a href="#cb8-122"></a><span class="in">  ) |&gt;</span></span>
+<span id="cb8-123"><a href="#cb8-123"></a><span class="in">  fmt(</span></span>
+<span id="cb8-124"><a href="#cb8-124"></a><span class="in">    columns = missing_percent,</span></span>
+<span id="cb8-125"><a href="#cb8-125"></a><span class="in">    fns = function(x) paste0(formatC(x, format = &quot;f&quot;, digits = 3), &quot; %&quot;)</span></span>
+<span id="cb8-126"><a href="#cb8-126"></a><span class="in">  ) |&gt;</span></span>
+<span id="cb8-127"><a href="#cb8-127"></a><span class="in">  cols_label(</span></span>
+<span id="cb8-128"><a href="#cb8-128"></a><span class="in">    variable = &quot;Variable Name&quot;,</span></span>
+<span id="cb8-129"><a href="#cb8-129"></a><span class="in">    types = &quot;Type&quot;,</span></span>
+<span id="cb8-130"><a href="#cb8-130"></a><span class="in">    missing_count = &quot;Missing Count&quot;,</span></span>
+<span id="cb8-131"><a href="#cb8-131"></a><span class="in">    missing_percent = &quot;Missing (%)&quot;</span></span>
+<span id="cb8-132"><a href="#cb8-132"></a><span class="in">  ) |&gt;</span></span>
+<span id="cb8-133"><a href="#cb8-133"></a><span class="in">  tab_style(</span></span>
+<span id="cb8-134"><a href="#cb8-134"></a><span class="in">    style = cell_text(weight = &quot;bold&quot;, align = &quot;center&quot;),</span></span>
+<span id="cb8-135"><a href="#cb8-135"></a><span class="in">    locations = cells_column_labels(everything())</span></span>
+<span id="cb8-136"><a href="#cb8-136"></a><span class="in">  ) |&gt;</span></span>
+<span id="cb8-137"><a href="#cb8-137"></a><span class="in">  tab_style(style = cell_text(align = &quot;center&quot;),</span></span>
+<span id="cb8-138"><a href="#cb8-138"></a><span class="in">            locations = cells_body(everything())) |&gt; </span></span>
+<span id="cb8-139"><a href="#cb8-139"></a><span class="in">  tab_options(</span></span>
+<span id="cb8-140"><a href="#cb8-140"></a><span class="in">    table.font.size = &quot;small&quot;,</span></span>
+<span id="cb8-141"><a href="#cb8-141"></a><span class="in">    column_labels.font.size = &quot;medium&quot;,</span></span>
+<span id="cb8-142"><a href="#cb8-142"></a><span class="in">    table.width = pct(100)     # &lt;-- full width of container</span></span>
+<span id="cb8-143"><a href="#cb8-143"></a><span class="in">  )</span></span>
+<span id="cb8-144"><a href="#cb8-144"></a><span class="in">```</span></span>
+<span id="cb8-145"><a href="#cb8-145"></a>&lt;/details&gt;</span>
+<span id="cb8-146"><a href="#cb8-146"></a></span>
+<span id="cb8-147"><a href="#cb8-147"></a><span class="in">```{r, echo=FALSE}</span></span>
+<span id="cb8-148"><a href="#cb8-148"></a><span class="in"># Now render the table by printing the gt object</span></span>
+<span id="cb8-149"><a href="#cb8-149"></a><span class="in">gt_table_1</span></span>
+<span id="cb8-150"><a href="#cb8-150"></a><span class="in">```</span></span>
+<span id="cb8-151"><a href="#cb8-151"></a></span>
+<span id="cb8-152"><a href="#cb8-152"></a><span class="fu">## water_insecurity_2023_data</span></span>
+<span id="cb8-153"><a href="#cb8-153"></a></span>
+<span id="cb8-154"><a href="#cb8-154"></a></span>
+<span id="cb8-155"><a href="#cb8-155"></a>&lt;details&gt;</span>
+<span id="cb8-156"><a href="#cb8-156"></a>  &lt;summary&gt;Code: Water Insecurity 2023 data analysis&lt;/summary&gt;</span>
+<span id="cb8-159"><a href="#cb8-159"></a><span class="in">```{r}</span></span>
+<span id="cb8-160"><a href="#cb8-160"></a><span class="co"># - manually create a table..</span></span>
+<span id="cb8-161"><a href="#cb8-161"></a>table2 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb8-162"><a href="#cb8-162"></a>  <span class="at">variable =</span> <span class="fu">c</span>(</span>
+<span id="cb8-163"><a href="#cb8-163"></a>    <span class="st">&quot;geoid&quot;</span>,</span>
+<span id="cb8-164"><a href="#cb8-164"></a>    <span class="st">&quot;name&quot;</span>,</span>
+<span id="cb8-165"><a href="#cb8-165"></a>    <span class="st">&quot;geometry&quot;</span>,</span>
+<span id="cb8-166"><a href="#cb8-166"></a>    <span class="st">&quot;year&quot;</span>,</span>
+<span id="cb8-167"><a href="#cb8-167"></a>    <span class="st">&quot;total_pop&quot;</span>,</span>
+<span id="cb8-168"><a href="#cb8-168"></a>    <span class="st">&quot;plumbing&quot;</span>,</span>
+<span id="cb8-169"><a href="#cb8-169"></a>    <span class="st">&quot;percent_lacking_plumbing&quot;</span></span>
+<span id="cb8-170"><a href="#cb8-170"></a>  ),</span>
+<span id="cb8-171"><a href="#cb8-171"></a>  <span class="at">types =</span> <span class="fu">c</span>(</span>
+<span id="cb8-172"><a href="#cb8-172"></a>    <span class="st">&quot;character&quot;</span>,</span>
+<span id="cb8-173"><a href="#cb8-173"></a>    <span class="st">&quot;character&quot;</span>,</span>
+<span id="cb8-174"><a href="#cb8-174"></a>    <span class="st">&quot;character&quot;</span>,</span>
+<span id="cb8-175"><a href="#cb8-175"></a>    <span class="st">&quot;numeric&quot;</span>,</span>
+<span id="cb8-176"><a href="#cb8-176"></a>    <span class="st">&quot;numeric&quot;</span>,</span>
+<span id="cb8-177"><a href="#cb8-177"></a>    <span class="st">&quot;numeric&quot;</span>,</span>
+<span id="cb8-178"><a href="#cb8-178"></a>    <span class="st">&quot;numeric&quot;</span></span>
+<span id="cb8-179"><a href="#cb8-179"></a>  ),</span>
+<span id="cb8-180"><a href="#cb8-180"></a>  <span class="at">missing_count =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>),</span>
+<span id="cb8-181"><a href="#cb8-181"></a>  <span class="at">missing_percent =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">0.1171</span>, <span class="fl">0.1171</span>)</span>
+<span id="cb8-182"><a href="#cb8-182"></a>)</span>
+<span id="cb8-183"><a href="#cb8-183"></a><span class="co"># - format the table with the gt library</span></span>
+<span id="cb8-184"><a href="#cb8-184"></a>gt_table_2 <span class="ot">&lt;-</span> table2 <span class="sc">|&gt;</span></span>
+<span id="cb8-185"><a href="#cb8-185"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb8-186"><a href="#cb8-186"></a>  <span class="fu">tab_header</span>(</span>
+<span id="cb8-187"><a href="#cb8-187"></a>    <span class="co">#&lt;--- format as markdown</span></span>
+<span id="cb8-188"><a href="#cb8-188"></a>    <span class="at">title =</span> <span class="fu">md</span>(<span class="st">&quot;Table 2: Variable Summary `water_insecurity_2023_dat`&quot;</span>) </span>
+<span id="cb8-189"><a href="#cb8-189"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb8-190"><a href="#cb8-190"></a>  <span class="fu">fmt</span>(</span>
+<span id="cb8-191"><a href="#cb8-191"></a>    <span class="at">columns =</span> missing_percent,</span>
+<span id="cb8-192"><a href="#cb8-192"></a>    <span class="at">fns =</span> <span class="cf">function</span>(x)</span>
+<span id="cb8-193"><a href="#cb8-193"></a>      <span class="fu">paste0</span>(<span class="fu">formatC</span>(x, <span class="at">format =</span> <span class="st">&quot;f&quot;</span>, <span class="at">digits =</span> <span class="dv">3</span>), <span class="st">&quot; %&quot;</span>)</span>
+<span id="cb8-194"><a href="#cb8-194"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb8-195"><a href="#cb8-195"></a>  <span class="fu">cols_label</span>(</span>
+<span id="cb8-196"><a href="#cb8-196"></a>    <span class="at">variable =</span> <span class="st">&quot;Variable Name&quot;</span>,</span>
+<span id="cb8-197"><a href="#cb8-197"></a>    <span class="at">types =</span> <span class="st">&quot;Type&quot;</span>,</span>
+<span id="cb8-198"><a href="#cb8-198"></a>    <span class="at">missing_count =</span> <span class="st">&quot;Missing Count&quot;</span>,</span>
+<span id="cb8-199"><a href="#cb8-199"></a>    <span class="at">missing_percent =</span> <span class="st">&quot;Missing (%)&quot;</span></span>
+<span id="cb8-200"><a href="#cb8-200"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb8-201"><a href="#cb8-201"></a>  <span class="fu">tab_style</span>(</span>
+<span id="cb8-202"><a href="#cb8-202"></a>    <span class="at">style =</span> <span class="fu">cell_text</span>(<span class="at">weight =</span> <span class="st">&quot;bold&quot;</span>, <span class="at">align =</span> <span class="st">&quot;center&quot;</span>),</span>
+<span id="cb8-203"><a href="#cb8-203"></a>    <span class="at">locations =</span> <span class="fu">cells_column_labels</span>(<span class="fu">everything</span>())</span>
+<span id="cb8-204"><a href="#cb8-204"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb8-205"><a href="#cb8-205"></a>  <span class="fu">tab_style</span>(<span class="at">style =</span> <span class="fu">cell_text</span>(<span class="at">align =</span> <span class="st">&quot;center&quot;</span>),</span>
+<span id="cb8-206"><a href="#cb8-206"></a>            <span class="at">locations =</span> <span class="fu">cells_body</span>(<span class="fu">everything</span>())) <span class="sc">|&gt;</span></span>
+<span id="cb8-207"><a href="#cb8-207"></a>  <span class="fu">tab_options</span>(</span>
+<span id="cb8-208"><a href="#cb8-208"></a>    <span class="at">table.font.size =</span> <span class="st">&quot;small&quot;</span>,</span>
+<span id="cb8-209"><a href="#cb8-209"></a>    <span class="at">column_labels.font.size =</span> <span class="st">&quot;medium&quot;</span>,</span>
+<span id="cb8-210"><a href="#cb8-210"></a>    <span class="at">table.width =</span> <span class="fu">pct</span>(<span class="dv">100</span>)     <span class="co"># &lt;-- full width of container</span></span>
+<span id="cb8-211"><a href="#cb8-211"></a>  )</span>
+<span id="cb8-212"><a href="#cb8-212"></a><span class="in">```</span></span>
+<span id="cb8-213"><a href="#cb8-213"></a>&lt;/details&gt;</span>
+<span id="cb8-214"><a href="#cb8-214"></a></span>
+<span id="cb8-215"><a href="#cb8-215"></a></span>
+<span id="cb8-216"><a href="#cb8-216"></a><span class="in">```{r, echo=FALSE}</span></span>
+<span id="cb8-217"><a href="#cb8-217"></a><span class="in"># Now render the table by printing the gt object</span></span>
+<span id="cb8-218"><a href="#cb8-218"></a><span class="in">gt_table_2</span></span>
+<span id="cb8-219"><a href="#cb8-219"></a><span class="in">```</span></span>
+<span id="cb8-220"><a href="#cb8-220"></a></span>
+<span id="cb8-221"><a href="#cb8-221"></a><span class="fu">## Synopsis of data quality:</span></span>
+<span id="cb8-222"><a href="#cb8-222"></a>These two datasets contain data on the lack of complete indoor plumbing in U.S. counties for the years 2022 and 2023. The 2022 dataset includes information from 848 counties, while the 2023 dataset includes 854 counties. Each dataset contains seven variables: geoid, name, geometry, year, total_pop, plumbing, percent_lacking_plumbing. The columns plumbing and percent_lacking_plumbing have a small number of missing values—less than 0.3%—which does not significantly impact the overall analysis.</span>
+<span id="cb8-223"><a href="#cb8-223"></a></span>
+<span id="cb8-224"><a href="#cb8-224"></a><span class="fu">## Why we chose this data-set:</span></span>
+<span id="cb8-225"><a href="#cb8-225"></a>We chose this dataset because water insecurity is a critical public health issue that may be influenced by various social vulnerability indicators. The data, sourced from the American Community Survey (ACS), provides county-level information on indoor plumbing insecurity for both 2022 and 2023. Since it covers multiple counties and spans two years, it is well-suited for analyzing year-over-year trends and regional disparities across the U.S. Additionally, the dataset is clean, complete, well-documented, and ideal for collaborative analysis and visualization.</span>
+<span id="cb8-226"><a href="#cb8-226"></a></span>
+<span id="cb8-227"><a href="#cb8-227"></a><span class="fu">## Question:</span></span>
+<span id="cb8-228"><a href="#cb8-228"></a></span>
+<span id="cb8-229"><a href="#cb8-229"></a>The two questions to be answered are:</span>
+<span id="cb8-230"><a href="#cb8-230"></a></span>
+<span id="cb8-231"><a href="#cb8-231"></a>Question 1: Top counties had the highest plumbing insecurity in 2022 and 2023.</span>
+<span id="cb8-232"><a href="#cb8-232"></a></span>
+<span id="cb8-233"><a href="#cb8-233"></a>Question 2: How did plumbing insecurity change between 2022 and 2023 for each county?</span>
+<span id="cb8-234"><a href="#cb8-234"></a></span>
+<span id="cb8-235"><a href="#cb8-235"></a><span class="fu">## Analysis plan</span></span>
+<span id="cb8-236"><a href="#cb8-236"></a></span>
+<span id="cb8-237"><a href="#cb8-237"></a>The following are the approaches we will be using for each question.</span>
+<span id="cb8-238"><a href="#cb8-238"></a></span>
+<span id="cb8-239"><a href="#cb8-239"></a><span class="fu">## **Approach for question 1**</span></span>
+<span id="cb8-240"><a href="#cb8-240"></a></span>
+<span id="cb8-241"><a href="#cb8-241"></a><span class="ss">-   </span>We want to visualize which U.S. counties experienced the highest level of plumbing insecurity in 2022 and 2023. To represent the available data best, we will be creating bar graphs showing the top 10 counties with the highest percentages of households lacking complete indoor plumbing for each year. The comparison of the plot will be done for each individual year to highlight the most affected regions in the U.S.</span>
+<span id="cb8-242"><a href="#cb8-242"></a></span>
+<span id="cb8-243"><a href="#cb8-243"></a>    We will clean the data using dplyr package by filtering and selecting the required variables for the analysis, including name, percent_lacking_plumbing, and year. We will sort the counties in descending order of percent_lacking_plumbing for each year. And the Top 10 counties for both 2022 and 2023 will be selected and combined into a single dataset for the visualization.</span>
+<span id="cb8-244"><a href="#cb8-244"></a></span>
+<span id="cb8-245"><a href="#cb8-245"></a>    To visualize the results, we will use geom_col() from ggplot2 package to create bar graph, showing comparison between 2022 and 2023 using facet separation. These plots will allow us to address our first research question by identifying the top 10 counties with plumbing insecurity in the U.S and comparing the top-affected regions between 2022 and 2023.</span>
 </code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
