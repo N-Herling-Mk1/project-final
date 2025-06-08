@@ -1,5 +1,5 @@
 ---
-title: "Plumbing the Data:\nMapping U.S. Water Insecurity"
+title: "Plumbing the Data:<br>Mapping U.S. Water Insecurity"
 subtitle: "Final project proposal - INFO 526"
 author: 
   - name: "Team: Yashi Mi & Nathan Herling"
