@@ -1,12 +1,14 @@
 project:
   type: website
+  resources:
+    - images
 
 website:
   title: Project Title
   navbar:
     right:
       - icon: github
-        href: https://github.com/INFO-526-SU24/project-01 # Needs to be changed to your project repo
+        href: https://github.com/N-Herling-Mk1/project-final # Needs to be changed to your project repo
     left:
       - text: Project
         href: index.qmd
@@ -19,7 +21,7 @@ website:
 
 format:
   html:
-    favicon: images/water_drop.png   # Path to your image file "images\water_drop.png"
+    favicon: images/water_drop.ico
     theme:
       light: flatly
       dark: darkly
@@ -28,3 +30,4 @@ format:
 
 execute:
   freeze: auto
+

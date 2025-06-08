@@ -224,7 +224,7 @@ The two questions to be answered are:
 
 Question 1: Top counties had the highest plumbing insecurity in 2022 and 2023.
 
-Question 2: How did plumbing insecurity change between 2022 and 2023 for each county?
+Question 2: How did plumbing insecurity change between 2022 and 2023 for each county? How if at all did the change correlate to population change, geographical location, or total owner occupied households lacking plumbing facilities (as represented by the `plumbing` category).
 
 ## Analysis plan
 
@@ -237,3 +237,23 @@ The following are the approaches we will be using for each question.
     We will clean the data using dplyr package by filtering and selecting the required variables for the analysis, including name, percent_lacking_plumbing, and year. We will sort the counties in descending order of percent_lacking_plumbing for each year. And the Top 10 counties for both 2022 and 2023 will be selected and combined into a single dataset for the visualization.
 
     To visualize the results, we will use geom_col() from ggplot2 package to create bar graph, showing comparison between 2022 and 2023 using facet separation. These plots will allow us to address our first research question by identifying the top 10 counties with plumbing insecurity in the U.S and comparing the top-affected regions between 2022 and 2023.
+    
+    
+## **Approach for question 2**
+- what do you want to visualize?
+- clean data, wrangle data, mutate data
+- how do you intend to visualize?
+
+::: {.callout-note}
+**Note:** Current Proposal 1.0.0. Subject to change.<br>
+(version.feature.patch notation)
+:::
+
+```{css echo=FALSE}
+.callout-note {
+  background-color: #d4f0dc; /* light emerald green */
+  border-left: 5px solid #2ecc71; /* darker emerald green accent */
+  padding: 1em 1.2em;
+  border-radius: 5px;
+}
+```
