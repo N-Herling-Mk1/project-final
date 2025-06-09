@@ -224,7 +224,7 @@ We chose this dataset because water insecurity is a critical public health issue
 <b>The two questions to be answered are:</b><br>
 <b>Question 1:</b> Top counties had the highest plumbing insecurity in 2022 and 2023.
 
-<b>Question 2:</b> How did plumbing insecurity change between 2022 and 2023 for each county? If it changed, how—if at all—did that change correlate with population change, geographical location, or the total number of owner-occupied households lacking plumbing facilities (as represented by the plumbing category)?
+<b>Question 2:</b> How did the plumbing insecurity change from 2022 to 2023 across U.S. counties, and where do significant spatial clusters (hotspots and coldspots) of worsening or improving plumbing access exist?
 
 ## Analysis plan
 
@@ -233,36 +233,35 @@ The following are the approaches we will be using for each question.
 
 ## Approach for question 1
 
--   We want to visualize which U.S. counties experienced the highest level of plumbing insecurity in 2022 and 2023. To represent the available data best, we will be creating bar graphs showing the top 10 counties with the highest percentages of households lacking complete indoor plumbing for each year. The comparison of the plot will be done for each individual year to highlight the most affected regions in the U.S.
+We want to visualize which U.S. counties experienced the highest level of plumbing insecurity in 2022 and 2023. To represent the available data best, we will be creating bar graphs showing the top 10 counties with the highest percentages of households lacking complete indoor plumbing for each year. The comparison of the plot will be done for each individual year to highlight the most affected regions in the U.S.
 
-    We will clean the data using dplyr package by filtering and selecting the required variables for the analysis, including name, percent_lacking_plumbing, and year. We will sort the counties in descending order of percent_lacking_plumbing for each year. And the Top 10 counties for both 2022 and 2023 will be selected and combined into a single dataset for the visualization. 
+We will clean the data using dplyr package by filtering and selecting the required variables for the analysis, including name, percent_lacking_plumbing, and year. We will sort the counties in descending order of percent_lacking_plumbing for each year. And the Top 10 counties for both 2022 and 2023 will be selected and combined into a single dataset for the visualization. 
 
-    To visualize the results, we will use geom_col() from ggplot2 package to create bar graph, showing comparison between 2022 and 2023 using facet separation. These plots will allow us to address our first research question by identifying the top 10 counties with plumbing insecurity in the U.S and comparing the top-affected regions between 2022 and 2023.
+To visualize the results, we will use geom_col() from ggplot2 package to create bar graph, showing comparison between 2022 and 2023 using facet separation. These plots will allow us to address our first research question by identifying the top 10 counties with plumbing insecurity in the U.S and comparing the top-affected regions between 2022 and 2023.
     
     
 ## Approach for question 2
-<span style="color:red; font-weight:bold;">We'll have to account for <br>1. missing data <br>2. 2023 data has more counties, we'll have to ignore those newer entries, as we can't calculate increase.</span>
-<span style="color:red; font-weight:bold;">I'm still working .. ha</span><br>
-- what do you want to visualize?<br>
-- clean data, wrangle data, mutate data<br>
-- how do you intend to visualize?
+We aim to identify and visualize spatial clusters of U.S. counties that experienced significant improvement or worsening in plumbing access between 2022 and 2023. Our goal is to reveal where changes in infrastructure equity are concentrated, rather than occurring randomly across the country. To do this, we will create a color-coded choropleth map representing hotspots (regions of worsening) and coldspots (regions of improvement) in the percentage of households lacking complete plumbing facilities.
+
+Before analysis, we will clean and filter the data using the dplyr package to ensure consistency between the two years. Rows with missing percent_lacking_plumbing values will be removed to ensure accurate change calculations. Since the 2023 dataset includes additional counties not present in 2022, we will exclude these newly added counties, as we cannot calculate change for them. Only counties with valid data for both 2022 and 2023 will be retained, and we will compute the difference in percent_lacking_plumbing to measure change.
+
+To detect spatial clusters of change, we will use the Getis-Ord G* (Local G*) statistic via the spdep package. This analysis will classify each county based on whether it is part of a statistically significant cluster of improvement or decline. Counties will be labeled as hotspots (worsening), coldspots (improving), or not significant, depending on the spatial pattern of their change values. The results will be visualized using tmap to create a choropleth map, helping us understand where in the U.S. plumbing access is improving or deteriorating in a geographically meaningful way.
 
 
 ## Variables examined per question
 ```{r, echo=FALSE}
 
-
 gt_table_3 <- data.frame(
   Variables = c("geoid", "name", "year", "geometry", 
-                "total_pop", "plumbing", "percent_lacking_plumbing", "Regional_Plumbing"),
-  Q1 = c("X", "X", "X", "X", "-", "-", "X", "-"), 
-  Q2 = c("X", "X", "X", "X", "X", "-", "X", "X")
+                "total_pop", "plumbing", "percent_lacking_plumbing"),
+  Q1 = c("-", "X", "X", "-", "-", "-", "X"), 
+  Q2 = c("X", "X", "X", "X", "-", "-", "X")
 )
 
 gt_table_3 |>
   gt() |>
   tab_header(
-    title = "Table 3: Variables Examined per question"
+    title = "Table 3: Summary of Variables Examined by Research Question"
   ) |>
   cols_label(
     Variables = "Variables",
@@ -271,24 +270,11 @@ gt_table_3 |>
   ) |>
   cols_align(
     align = "left",
-    columns = Variables
+    columns = vars(Variables)
   ) |>
   tab_options(
     table.width = pct(100)
-  ) |>
-  tab_style(
-    style = list(
-      cell_fill(color = "#ffffB7")       # light yellow background
-    ),
-    locations = cells_body(
-      rows = nrow(gt_table_3)            # last row only
-    )
-  ) |>
-  tab_source_note(
-    source_note = "Note: The bottom row represents a variable brought in from outside the main dataset."
   )
-
-
 ```
 
 ::: {.callout-note}
