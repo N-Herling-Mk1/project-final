@@ -69,36 +69,7 @@ water_insecurity_2022 <- read_csv(here("water_insecurity",
 water_insecurity_2023 <- read_csv(here("water_insecurity",
                                        "water_insecurity_2023.csv"))
 
-
 View(water_insecurity_2022)
 spec(water_insecurity_2022)
 View(water_insecurity_2023)
 spec(water_insecurity_2022)
-
-#-- different ways to see names of columns.
-#cat("Using names()")
-names(water_insecurity_2022)
-#cat("Using colnames()")
-colnames(water_insecurity_2022)
-cat(names(water_insecurity_2022), sep = "\n")
-# - print one of the lists
-#print(water_insecurity_2022$geometry[1])
-county1 <- water_insecurity_2022$geometry[1]
-
-#get stats on the 'name' category.
-unique_names_22 <- unique(water_insecurity_2022$name)
-#print(unique_names)
-
-unique_names_23 <- unique(water_insecurity_2023$name)
-#print(unique_names)
-
-print(identical(unique_names_22, unique_names_23))
-
-cat("In 22 and not in 23\n")
-mismatch_22_not_23 <- setdiff(unique_names_22, unique_names_23)
-print(mismatch_22_not_23)
-
-# Names in 2023 but NOT in 2022
-cat("In 23 and not in 22\n")
-mismatch_23_not_22 <- setdiff(unique_names_23, unique_names_22)
-print(mismatch_23_not_22)
