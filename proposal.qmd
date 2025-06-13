@@ -70,7 +70,7 @@ For the final project, we selected the U.S. Water Insecurity dataset from TidyTu
 
 The two datastes includes the following variables:
 
--   `geoid`: The U.S. Census Bureau ACS county id.
+-   `geoid`: YES The U.S. Census Bureau ACS county id.
 
 -   `name`: The U.S. Census Bureau ACS county name.
 
